@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class TerrainGenerator : MonoBehaviour
 {
-    public int width = 256;
-    public int depth = 256;
+    public int width = 500;
+    public int depth = 500;
     public float maxHeight = 10f; // Maximum height of the peaks
     public int numberOfPeaks = 15; // Set number of peaks
     public GameObject treePrefab; // Assign your tree prefab here
@@ -11,12 +11,14 @@ public class TerrainGenerator : MonoBehaviour
 
     public int treeCount = 100; // Number of large trees to spawn
     public int treeCountSmall = 100; // Number of small trees to spawn
+    public TerrainLayer[] terrainLayers; // Array of terrain layers
 
     private void Start()
     {
         Terrain terrain = Terrain.activeTerrain;
         terrain.terrainData = GenerateTerrain(terrain.terrainData);
         SpawnTrees(terrain);
+        ApplyTerrainLayers(terrain);
     }
 
     TerrainData GenerateTerrain(TerrainData terrainData)
@@ -72,5 +74,29 @@ public class TerrainGenerator : MonoBehaviour
 
         // Instantiate the tree prefab
         Instantiate(treePrefab, new Vector3(xPos, yPos, zPos), Quaternion.identity);
+    }
+
+    void ApplyTerrainLayers(Terrain terrain)
+    {
+        TerrainData terrainData = terrain.terrainData;
+
+        // Get the current heights for the terrain
+        float[,] heights = terrainData.GetHeights(0, 0, width, depth);
+
+        // Create a new splat map to apply terrain layers
+        float[,,] splatmapData = new float[width, depth, terrainLayers.Length];
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int z = 0; z < depth; z++)
+            {
+                // Randomly choose a terrain layer to apply based on the height
+                int randomLayerIndex = Random.Range(0, terrainLayers.Length);
+                splatmapData[x, z, randomLayerIndex] = 1; // Set the weight for this layer
+            }
+        }
+
+        // Apply the splat map to the terrain
+        terrainData.SetAlphamaps(0, 0, splatmapData);
     }
 }

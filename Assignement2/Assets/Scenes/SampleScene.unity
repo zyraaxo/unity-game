@@ -156,12 +156,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 256
   depth: 256
-  maxHeight: 10
-  numberOfPeaks: 15
+  maxHeight: 15
+  numberOfPeaks: 25
   treePrefab: {fileID: 1793094226105878, guid: 5c8f1a7d51fe1c44fa5564419b1bd1ea, type: 3}
   treePrefabSmall: {fileID: 1700193797189004, guid: 3ee4eeaed82c357459a9327775a821e4, type: 3}
-  treeCount: 50
-  treeCountSmall: 100
+  treeCount: 0
+  treeCountSmall: 0
+  terrainLayers:
+  - {fileID: 8574412962073106934, guid: 1f547dde7ea517b469fd6b1565d5129a, type: 2}
+  - {fileID: 8574412962073106934, guid: 03975807469bd324c8bf3511fd4bdca3, type: 2}
 --- !u!154 &422211709
 TerrainCollider:
   m_ObjectHideFlags: 0
@@ -786,7 +789,7 @@ Transform:
   m_GameObject: {fileID: 1242760324}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.86, y: 12.25, z: 5.95}
+  m_LocalPosition: {x: 2.86, y: 53.8, z: 5.95}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
