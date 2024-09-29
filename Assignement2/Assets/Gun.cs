@@ -1,49 +1,42 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using StarterAssets;
 
 public class Gun : MonoBehaviour
 {
+    private StarterAssetsInputs _input;
 
-    [Header("References")]
-    [SerializeField] private GunData gunData;
-    [SerializeField] private Transform muzzle;
+    [SerializeField]
+    private GameObject BulletPreFab;
 
-    float timeSinceLastShot;
+    // Reference to the bullet spawn point
+    [SerializeField]
+    private Transform bulletPoint;
 
-    private void Start()
+    [SerializeField]
+    private float bSpeed = 1200f; // Ensure this is positive for forward force
+
+    void Start()
     {
-        PlayerShoot.shootInput += Shoot;
+        _input = transform.root.GetComponent<StarterAssetsInputs>();
     }
-    private bool CanShoot() => !gunData.reloading && timeSinceLastShot > 1f / (gunData.fireRate / 60f);
 
-
-    private void Shoot()
+    void Update()
     {
-        if (gunData.currentAmmo > 0)
+        if (_input.shoot)
         {
-            if (CanShoot())
-            {
-                if (Physics.Raycast(muzzle.position, muzzle.forward, out RaycastHit hitInfo, gunData.maxDistance))
-                {
-                    Debug.Log(hitInfo.transform.name);
-                }
-                gunData.currentAmmo--;
-                timeSinceLastShot = 0;
-                OnGunShot();
-            }
-
+            Shoot();
+            _input.shoot = false;
         }
-
     }
-    private void Update()
+
+    void Shoot()
     {
-        timeSinceLastShot += Time.deltaTime;
-
-        Debug.DrawRay(muzzle.position, muzzle.forward);
+        // Instantiate bullet at the bullet point's position
+        GameObject bullet = Instantiate(BulletPreFab, bulletPoint.position, bulletPoint.rotation * Quaternion.Euler(90f, 0f, 0f));
+        bullet.GetComponent<Rigidbody>().AddForce(bulletPoint.forward * bSpeed);
+        Destroy(bullet, 1);
     }
-
-    private void OnGunShot() { }
 
 }
