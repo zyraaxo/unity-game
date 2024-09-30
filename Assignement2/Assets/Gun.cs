@@ -37,13 +37,12 @@ public class Gun : MonoBehaviour
 
     void Shoot()
     {
-        // Instantiate bullet at the bullet point's position
         GameObject bullet = Instantiate(BulletPreFab, bulletPoint.position, bulletPoint.rotation * Quaternion.Euler(90f, 0f, 0f));
         bullet.GetComponent<Rigidbody>().AddForce(bulletPoint.forward * bSpeed);
 
-        // Play the shooting sound
-        audioSource.Play();
 
+        audioSource.Play();
         Destroy(bullet, 1);
     }
+
 }
