@@ -1771,7 +1771,7 @@ Animator:
   m_GameObject: {fileID: 4493914613880827488}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 8f7380da49034cd488ddff94b1ac35d1, type: 3}
-  m_Controller: {fileID: 9100000, guid: b10401cad7ebd744b8727465bd07bfe9, type: 2}
+  m_Controller: {fileID: 9100000, guid: ef99bb92c1ec162439f0f4d129371109, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -1876,6 +1876,8 @@ MonoBehaviour:
   patrolSpeed: 2
   maxDistance: 10
   patrolRadius: 15
+  moveAudio: {fileID: 8300000, guid: 8b579bf432f9ec746b5157530a808ee1, type: 3}
+  attackAudio: {fileID: 8300000, guid: ac49383c0bb7afe43bf5cd3eb573a2b8, type: 3}
 --- !u!1 &4710940672626480558
 GameObject:
   m_ObjectHideFlags: 0

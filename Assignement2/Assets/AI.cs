@@ -6,8 +6,11 @@ public class MoveTowardsPlayer : MonoBehaviour
     public float patrolSpeed = 1.0f; // Speed when patrolling
     public float maxDistance = 10.0f; // Maximum distance at which the object will move towards the player
     public float patrolRadius = 5.0f; // Radius within which the zombie will patrol
+    public AudioClip moveAudio; // Audio clip for moving
+    public AudioClip attackAudio; // Audio clip for attacking
     private Transform player;  // Reference to the player Transform
     private Animator animator; // Reference to the Animator component
+    private AudioSource audioSource; // Reference to the AudioSource component
     private Vector3 patrolTarget; // Target position for patrolling
     private float stoppingDistance = 1.0f; // Distance at which the object stops moving
 
@@ -23,6 +26,9 @@ public class MoveTowardsPlayer : MonoBehaviour
         // Get the Animator component attached to this object
         animator = GetComponent<Animator>();
 
+        // Get the AudioSource component attached to this object
+        audioSource = GetComponent<AudioSource>();
+
         // If there is an animator, set it to idle by default
         if (animator != null)
         {
@@ -32,6 +38,13 @@ public class MoveTowardsPlayer : MonoBehaviour
 
         // Set initial patrol target
         SetNewPatrolTarget();
+
+        // Configure the audio source
+        if (audioSource != null)
+        {
+            audioSource.clip = moveAudio; // Set the audio clip for moving
+            audioSource.loop = true; // Enable looping
+        }
     }
 
     void Update()
@@ -40,16 +53,29 @@ public class MoveTowardsPlayer : MonoBehaviour
         {
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-            if (distanceToPlayer > stoppingDistance && distanceToPlayer <= maxDistance)
+            // Determine the state of the zombie
+            bool isMoving = distanceToPlayer > stoppingDistance && distanceToPlayer <= maxDistance;
+            bool isAttacking = distanceToPlayer <= stoppingDistance;
+            bool isPatrolling = !isMoving && !isAttacking;
+
+            switch (true)
             {
-                // Move towards the player
-                MoveTowardsPlayerTarget();
+                case bool _ when isAttacking:
+                    AttackPlayer();
+                    break;
+
+                case bool _ when isMoving:
+                    MoveTowardsPlayerTarget();
+                    break;
+
+                case bool _ when isPatrolling:
+                    Patrol();
+                    break;
             }
-            else
-            {
-                // Patrol around
-                Patrol();
-            }
+        }
+        if (animator != null && animator.GetBool("isAttacking") && !animator.GetCurrentAnimatorStateInfo(0).IsName("AttackAnimationName"))
+        {
+            animator.SetBool("isAttacking", false); // Reset attack state after animation is finished
         }
     }
 
@@ -70,6 +96,12 @@ public class MoveTowardsPlayer : MonoBehaviour
         {
             animator.SetBool("isMoving", true);
             animator.SetBool("isPatrolling", false); // Stop patrolling animation
+        }
+
+        // Play moving audio if not already playing
+        if (audioSource != null && !audioSource.isPlaying)
+        {
+            audioSource.Play(); // Play the moving sound
         }
     }
 
@@ -97,6 +129,12 @@ public class MoveTowardsPlayer : MonoBehaviour
             animator.SetBool("isMoving", false); // Stop moving animation
             animator.SetBool("isPatrolling", true); // Start patrolling animation
         }
+
+        // Stop moving audio when patrolling
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            audioSource.Stop(); // Stop the moving sound when patrolling
+        }
     }
 
     void SetNewPatrolTarget()
@@ -107,5 +145,25 @@ public class MoveTowardsPlayer : MonoBehaviour
             transform.position.y,
             transform.position.z + Random.Range(-patrolRadius, patrolRadius)
         );
+    }
+
+    void AttackPlayer()
+    {
+        // Logic to attack the player, e.g., dealing damage
+        if (animator != null)
+        {
+            // Check if the animator is not already attacking
+            if (!animator.GetBool("isAttacking"))
+            {
+                animator.SetBool("isAttacking", true); // Trigger attack animation
+            }
+        }
+
+        // Play attack audio
+        if (audioSource != null && !audioSource.isPlaying)
+        {
+            audioSource.clip = attackAudio; // Set the audio clip for attacking
+            audioSource.Play(); // Play the attack sound
+        }
     }
 }
