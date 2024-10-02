@@ -1771,7 +1771,7 @@ Animator:
   m_GameObject: {fileID: 4493914613880827488}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 8f7380da49034cd488ddff94b1ac35d1, type: 3}
-  m_Controller: {fileID: 9100000, guid: 2ef8e6599b7f9934e8ff0d64c5325a1f, type: 2}
+  m_Controller: {fileID: 9100000, guid: b10401cad7ebd744b8727465bd07bfe9, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -1872,7 +1872,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2243d96f78e6b0a478dbed941f347fbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 6
+  patrolSpeed: 2
+  maxDistance: 10
+  patrolRadius: 5
 --- !u!1 &4710940672626480558
 GameObject:
   m_ObjectHideFlags: 0
