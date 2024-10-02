@@ -1875,7 +1875,7 @@ MonoBehaviour:
   speed: 6
   patrolSpeed: 2
   maxDistance: 10
-  patrolRadius: 5
+  patrolRadius: 15
 --- !u!1 &4710940672626480558
 GameObject:
   m_ObjectHideFlags: 0
