@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+
 
 public class MoveTowardsPlayer : MonoBehaviour
 {
@@ -10,7 +12,7 @@ public class MoveTowardsPlayer : MonoBehaviour
     public AudioClip attackAudio; // Audio clip for attacking
     public AudioClip deathAudio; // Audio clip for dying
     public float health = 100.0f; // Zombie's health
-    public float damageAmount = 100.0f; // Amount of damage per bullet hit
+    public float damageAmount = 10.0f; // Amount of damage per bullet hit
 
     private Transform player;  // Reference to the player Transform
     private Animator animator; // Reference to the Animator component
@@ -194,12 +196,12 @@ public class MoveTowardsPlayer : MonoBehaviour
         // If health is 0 or less, die
         if (health <= 0f)
         {
-            Die();
+            StartCoroutine(Die()); // Call coroutine to handle death animation and destruction
         }
     }
 
     // Handle zombie death
-    void Die()
+    IEnumerator Die()
     {
         isDead = true; // Prevent further actions
 
@@ -215,7 +217,10 @@ public class MoveTowardsPlayer : MonoBehaviour
             audioSource.Play(); // Play the death sound
         }
 
-        // Optionally, destroy the zombie GameObject after the death animation
-        Destroy(gameObject, 2f); // Delay destroy to let animation/audio play
+        // Wait for the length of the death animation before destroying the object
+        yield return new WaitForSeconds(3.0f);
+
+        // Destroy the zombie GameObject after the death animation has finished
+        Destroy(gameObject);
     }
 }
