@@ -88,7 +88,7 @@ public class MoveTowardsPlayer : MonoBehaviour
         if (animator != null && animator.GetBool("isAttacking") && !animator.GetCurrentAnimatorStateInfo(0).IsName("AttackAnimationName"))
         {
             animator.SetBool("isAttacking", false); // Reset attack state after animation is finished
-        }*/
+        }
     }
 
     void MoveTowardsPlayerTarget()

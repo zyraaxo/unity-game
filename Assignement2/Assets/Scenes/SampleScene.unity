@@ -296,7 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38eaab76021d92b4cbb83cb3514d2309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectToSpawn: {fileID: 4063092971807459711, guid: c1d08425927c4c9409909bb2f645e49d, type: 3}
+  objectToSpawn: {fileID: 4493914613880827488, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
   numberOfObjects: 50
   terrain: {fileID: 1105180855}
 --- !u!4 &175152914
@@ -491,6 +491,34 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &256226112 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4493914613880827488, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
+  m_PrefabInstance: {fileID: 1149144571}
+  m_PrefabAsset: {fileID: 0}
+--- !u!136 &256226118
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256226112}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &364000226
 GameObject:
   m_ObjectHideFlags: 0
@@ -1035,7 +1063,7 @@ TerrainCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_TerrainData: {fileID: 15600000, guid: 8c9e4d17ef113db4cadf1347b480565e, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: d6d76dc359fb3144f8e88d2263b82310, type: 2}
   m_EnableTreeColliders: 1
 --- !u!218 &1105180855
 Terrain:
@@ -1287,6 +1315,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7906420113701569281, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 578376449398627443, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
       propertyPath: m_LocalPosition.x
       value: 16.984844
@@ -1331,10 +1363,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie1
       objectReference: {fileID: 0}
+    - target: {fileID: 4493914613880827488, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4493914613880827488, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 256226118}
   m_SourcePrefab: {fileID: 100100000, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
 --- !u!1 &1242760324
 GameObject:
@@ -1743,12 +1782,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 806107274451340768, guid: c1d08425927c4c9409909bb2f645e49d, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: a2c3cf7ad533f70448e0e7457fee0145, type: 2}
     - target: {fileID: 866156627867241865, guid: c1d08425927c4c9409909bb2f645e49d, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 866156627867241865, guid: c1d08425927c4c9409909bb2f645e49d, type: 3}
       propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 866156627867241865, guid: c1d08425927c4c9409909bb2f645e49d, type: 3}
+      propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 866156627867241865, guid: c1d08425927c4c9409909bb2f645e49d, type: 3}
@@ -1821,3 +1868,5 @@ SceneRoots:
   - {fileID: 175152914}
   - {fileID: 1031874180}
   - {fileID: 1149144571}
+  - {fileID: 2566725042051680942}
+  - {fileID: 364000228}
