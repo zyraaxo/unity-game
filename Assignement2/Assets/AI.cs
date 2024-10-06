@@ -8,11 +8,16 @@ public class MoveTowardsPlayer : MonoBehaviour
     public float patrolRadius = 5.0f; // Radius within which the zombie will patrol
     public AudioClip moveAudio; // Audio clip for moving
     public AudioClip attackAudio; // Audio clip for attacking
+    public AudioClip deathAudio; // Audio clip for dying
+    public float health = 100.0f; // Zombie's health
+    public float damageAmount = 100.0f; // Amount of damage per bullet hit
+
     private Transform player;  // Reference to the player Transform
     private Animator animator; // Reference to the Animator component
     private AudioSource audioSource; // Reference to the AudioSource component
     private Vector3 patrolTarget; // Target position for patrolling
     private float stoppingDistance = 1.0f; // Distance at which the object stops moving
+    private bool isDead = false; // Check if the zombie is dead
 
     void Start()
     {
@@ -49,7 +54,7 @@ public class MoveTowardsPlayer : MonoBehaviour
 
     void Update()
     {
-        if (player != null)
+        if (player != null && !isDead)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
@@ -73,6 +78,7 @@ public class MoveTowardsPlayer : MonoBehaviour
                     break;
             }
         }
+
         if (animator != null && animator.GetBool("isAttacking") && !animator.GetCurrentAnimatorStateInfo(0).IsName("AttackAnimationName"))
         {
             animator.SetBool("isAttacking", false); // Reset attack state after animation is finished
@@ -165,5 +171,51 @@ public class MoveTowardsPlayer : MonoBehaviour
             audioSource.clip = attackAudio; // Set the audio clip for attacking
             audioSource.Play(); // Play the attack sound
         }
+    }
+
+    // Handle bullet collision
+    private void OnTriggerEnter(Collider other)
+    {
+        // Check if the object colliding is a bullet
+        if (other.CompareTag("Bullet"))
+        {
+            TakeDamage(damageAmount);
+
+            // Destroy the bullet after it hits
+            Destroy(other.gameObject);
+        }
+    }
+
+    // Reduce health and handle death
+    void TakeDamage(float amount)
+    {
+        health -= amount;
+
+        // If health is 0 or less, die
+        if (health <= 0f)
+        {
+            Die();
+        }
+    }
+
+    // Handle zombie death
+    void Die()
+    {
+        isDead = true; // Prevent further actions
+
+        if (animator != null)
+        {
+            animator.SetTrigger("Die"); // Trigger death animation
+        }
+
+        // Play death audio
+        if (audioSource != null)
+        {
+            audioSource.clip = deathAudio; // Set the audio clip for dying
+            audioSource.Play(); // Play the death sound
+        }
+
+        // Optionally, destroy the zombie GameObject after the death animation
+        Destroy(gameObject, 2f); // Delay destroy to let animation/audio play
     }
 }
