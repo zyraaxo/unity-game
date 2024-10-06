@@ -49,6 +49,8 @@ public class MoveTowardsPlayer : MonoBehaviour
 
     void Update()
     {
+
+        Debug.Log(animator.GetBool("isAttacking"));
         if (player != null)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
@@ -72,11 +74,17 @@ public class MoveTowardsPlayer : MonoBehaviour
                     Patrol();
                     break;
             }
+
+            if (!isAttacking) {
+                animator.SetBool("isAttacking", false) ; // Reset attack state after animation is finished
+            }
         }
+
+        /*
         if (animator != null && animator.GetBool("isAttacking") && !animator.GetCurrentAnimatorStateInfo(0).IsName("AttackAnimationName"))
         {
             animator.SetBool("isAttacking", false); // Reset attack state after animation is finished
-        }
+        }*/
     }
 
     void MoveTowardsPlayerTarget()
@@ -147,16 +155,11 @@ public class MoveTowardsPlayer : MonoBehaviour
         );
     }
 
-    void AttackPlayer()
-    {
+    void AttackPlayer() {
         // Logic to attack the player, e.g., dealing damage
         if (animator != null)
         {
-            // Check if the animator is not already attacking
-            if (!animator.GetBool("isAttacking"))
-            {
-                animator.SetBool("isAttacking", true); // Trigger attack animation
-            }
+            animator.SetBool("isAttacking", true);
         }
 
         // Play attack audio
