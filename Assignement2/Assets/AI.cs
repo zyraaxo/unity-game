@@ -80,15 +80,16 @@ public class MoveTowardsPlayer : MonoBehaviour
                     break;
             }
 
-            if (!isAttacking) {
-                animator.SetBool("isAttacking", false) ; // Reset attack state after animation is finished
+            if (!isAttacking)
+            {
+                animator.SetBool("isAttacking", false); // Reset attack state after animation is finished
             }
         }
 
         if (animator != null && animator.GetBool("isAttacking") && !animator.GetCurrentAnimatorStateInfo(0).IsName("AttackAnimationName"))
         {
             animator.SetBool("isAttacking", false); // Reset attack state after animation is finished
-        }*/
+        }
     }
 
     void MoveTowardsPlayerTarget()
@@ -159,7 +160,8 @@ public class MoveTowardsPlayer : MonoBehaviour
         );
     }
 
-    void AttackPlayer() {
+    void AttackPlayer()
+    {
         // Logic to attack the player, e.g., dealing damage
         if (animator != null)
         {
