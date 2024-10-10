@@ -5,7 +5,7 @@ using StarterAssets;
 
 public class Gun : MonoBehaviour
 {
-    private FirstPersonController _input;
+    private StarterAssetsInputs _input;
 
     [SerializeField]
     private GameObject BulletPreFab;
@@ -23,7 +23,7 @@ public class Gun : MonoBehaviour
 
     void Start()
     {
-        _input = transform.root.GetComponent<FirstPersonController>();
+        _input = transform.root.GetComponent<StarterAssetsInputs>();
     }
 
     void Update()
