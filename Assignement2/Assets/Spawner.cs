@@ -5,6 +5,7 @@ public class TerrainObjectSpawner : MonoBehaviour
     public GameObject objectToSpawn; // Assign your prefab in the Inspector
     public int numberOfObjects = 50; // Number of objects to spawn
     public Terrain terrain; // Reference to the Terrain object
+    public float maxSlope = 30f; // Maximum slope allowed for object spawning
 
     void Start()
     {
@@ -13,29 +14,33 @@ public class TerrainObjectSpawner : MonoBehaviour
 
     void SpawnObjects()
     {
-        // Get the terrain size
-        int terrainWidth = terrain.terrainData.heightmapResolution;
-        int terrainHeight = terrain.terrainData.heightmapResolution;
         Vector3 terrainSize = terrain.terrainData.size;
+        int spawnedObjects = 0;
 
-        for (int i = 0; i < numberOfObjects; i++)
+        while (spawnedObjects < numberOfObjects)
         {
             // Generate random positions within the terrain bounds
-            float randomX = Random.Range(0, terrainWidth);
-            float randomZ = Random.Range(0, terrainHeight);
+            float randomX = Random.Range(0, terrainSize.x);
+            float randomZ = Random.Range(0, terrainSize.z);
 
             // Get the height at the random point
-            float y = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
+            float y = terrain.SampleHeight(new Vector3(randomX, 0, randomZ)) + terrain.transform.position.y;
 
-            // Convert to world position
-            Vector3 spawnPosition = new Vector3(
-                randomX / terrainWidth * terrainSize.x,
-                y,
-                randomZ / terrainHeight * terrainSize.z
-            );
+            // Calculate the slope (steepness) at the random point
+            float slope = terrain.terrainData.GetSteepness(randomX / terrainSize.x, randomZ / terrainSize.z);
 
-            // Instantiate the object at the spawn position
-            Instantiate(objectToSpawn, spawnPosition, Quaternion.identity);
+            // Check if the slope is within the acceptable range
+            if (slope <= maxSlope)
+            {
+                // Set the spawn position with the correct terrain Y height
+                Vector3 spawnPosition = new Vector3(randomX, y, randomZ);
+
+                // Instantiate the object at the spawn position
+                Instantiate(objectToSpawn, spawnPosition, Quaternion.identity);
+
+                // Increment the counter for spawned objects
+                spawnedObjects++;
+            }
         }
     }
 }

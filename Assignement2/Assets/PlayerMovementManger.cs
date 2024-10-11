@@ -8,6 +8,9 @@ public class PlayerMovementManager : MonoBehaviour
     public AudioSource staminaDepletedSound; // Reference to the AudioSource for stamina depleted sound
     public AudioSource sprintCooldownSound; // Reference to the AudioSource for sprint cooldown sound
 
+    public GameObject regularGun; // The regular gun object
+    public GameObject sprintingGun; // The gun to show when sprinting
+
     public PostProcessVolume postProcessVolume; // Reference to the Post Processing Volume
     private DepthOfField depthOfField; // Reference to the Depth of Field effect
 
@@ -31,6 +34,12 @@ public class PlayerMovementManager : MonoBehaviour
         else
         {
             Debug.LogWarning("PostProcessVolume is not assigned or found!"); // Warn if not found
+        }
+
+        // Ensure the sprinting gun is hidden at the start
+        if (sprintingGun != null)
+        {
+            sprintingGun.SetActive(false); // Hide sprinting gun
         }
     }
 
@@ -61,9 +70,20 @@ public class PlayerMovementManager : MonoBehaviour
                 walkingSound.Stop(); // Stop the walking sound
             }
 
-            // Check if sprinting and if stamina is depleted
+            // Check if sprinting and handle gun visibility
             if (playerMovement.enableSprint && playerMovement.isSprinting)
             {
+                if (regularGun != null)
+                {
+                    regularGun.SetActive(false); // Hide the regular gun
+                }
+
+                if (sprintingGun != null)
+                {
+                    sprintingGun.SetActive(true); // Show the sprinting gun
+                }
+
+                // Check if stamina is depleted
                 if (playerMovement.sprintRemaining <= 0)
                 {
                     if (!hasPlayedStaminaSound)
@@ -93,6 +113,20 @@ public class PlayerMovementManager : MonoBehaviour
                         Debug.Log("Depth of Field deactivated; stamina is sufficient."); // Log message
                     }
                 }
+            }
+            else
+            {
+                if (regularGun != null)
+                {
+                    regularGun.SetActive(true); // Show the regular gun
+                }
+
+                if (sprintingGun != null)
+                {
+                    sprintingGun.SetActive(false); // Hide the sprinting gun
+                }
+
+                hasPlayedStaminaSound = false; // Reset when sprinting stops
             }
 
             // Check if sprint cooldown is active
@@ -128,7 +162,7 @@ public class PlayerMovementManager : MonoBehaviour
                 // Reset blur effect when cooldown is not active
                 if (depthOfField != null)
                 {
-                    depthOfField.active = true; // Deactivate depth of field
+                    depthOfField.active = false; // Deactivate depth of field
                     Debug.Log("Depth of Field deactivated; cooldown finished."); // Log message
                 }
             }
