@@ -4,6 +4,12 @@ timeCreated: 1506184325
 licenseType: Store
 NativeFormatImporter:
   mainObjectFileID: -1
+=======
+guid: e274b47fd2bc04c4fb497124f00b2c64
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+>>>>>>> Stashed changes
   userData: 
   assetBundleName: 
   assetBundleVariant: 
