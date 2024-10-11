@@ -10,6 +10,7 @@ public class PlayerMovementManager : MonoBehaviour
 
     public GameObject regularGun; // The regular gun object
     public GameObject sprintingGun; // The gun to show when sprinting
+    public GameObject currentGun; // Reference to the currently equipped gun
 
     public PostProcessVolume postProcessVolume; // Reference to the Post Processing Volume
     private DepthOfField depthOfField; // Reference to the Depth of Field effect
@@ -17,6 +18,8 @@ public class PlayerMovementManager : MonoBehaviour
     private bool isWalking = false;
     private bool hasPlayedStaminaSound = false; // To track if the stamina sound has already played
     private bool hasPlayedCooldownSound = false; // To track if the cooldown sound has already played
+    public GameObject gunSpawnPoint; // Reference to the gun spawn point
+
 
     void Start()
     {
@@ -41,6 +44,9 @@ public class PlayerMovementManager : MonoBehaviour
         {
             sprintingGun.SetActive(false); // Hide sprinting gun
         }
+
+        // Initialize the current gun to the regular gun
+        currentGun = regularGun;
     }
 
     void Update()
@@ -73,9 +79,9 @@ public class PlayerMovementManager : MonoBehaviour
             // Check if sprinting and handle gun visibility
             if (playerMovement.enableSprint && playerMovement.isSprinting)
             {
-                if (regularGun != null)
+                if (currentGun != null)
                 {
-                    regularGun.SetActive(false); // Hide the regular gun
+                    currentGun.SetActive(false); // Hide the current gun
                 }
 
                 if (sprintingGun != null)
@@ -116,9 +122,9 @@ public class PlayerMovementManager : MonoBehaviour
             }
             else
             {
-                if (regularGun != null)
+                if (currentGun != null)
                 {
-                    regularGun.SetActive(true); // Show the regular gun
+                    currentGun.SetActive(true); // Show the current gun
                 }
 
                 if (sprintingGun != null)
@@ -168,4 +174,22 @@ public class PlayerMovementManager : MonoBehaviour
             }
         }
     }
+
+    public void PickUpGun(GameObject newGunPickup)
+    {
+        if (currentGun != null)
+        {
+            currentGun.SetActive(false); // Deactivate the current gun
+        }
+
+        currentGun = newGunPickup; // Set the new gun pickup as the current gun
+        currentGun.SetActive(true); // Activate the new gun
+
+        // Set the position and rotation of the new gun to match the pickup's position and rotation
+        currentGun.transform.position = transform.position; // Assuming the PlayerMovementManager is on the player
+        currentGun.transform.rotation = transform.rotation; // Set rotation to match the player
+
+        Debug.Log("Picked up a new gun: " + newGunPickup.name);
+    }
+
 }

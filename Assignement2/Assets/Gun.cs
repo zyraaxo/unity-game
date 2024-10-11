@@ -10,6 +10,9 @@ public class Gun : MonoBehaviour
     [SerializeField]
     private GameObject BulletPreFab;
 
+    [SerializeField]
+    private GunData gunData; // Assign this in the inspector
+
     // Reference to the bullet spawn point
     [SerializeField]
     private Transform bulletPoint;
