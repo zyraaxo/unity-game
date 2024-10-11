@@ -52,14 +52,15 @@ public class GunPickup : MonoBehaviour
 
             if (currentGun != null)
             {
-                // Deactivate the current gun
-                currentGun.SetActive(false);
+                // Save the current gun's position and rotation (optional, if you need it later)
+                Vector3 currentGunPosition = currentGun.transform.position;
+                Quaternion currentGunRotation = currentGun.transform.rotation;
 
                 // Calculate the spawn position in front of the camera
-                Vector3 spawnPosition = Camera.main.transform.position + Camera.main.transform.forward * 1.5f; // Adjust the multiplier as needed
+                Vector3 spawnPosition = positionReference.transform.position; // Use positionReference for the new gun spawn
 
                 // Instantiate the new gun at the spawn position
-                GameObject newGun = Instantiate(gunModel, spawnPosition, Camera.main.transform.rotation);
+                GameObject newGun = Instantiate(gunModel, spawnPosition, currentGunRotation);
 
                 // Set the new gun as a child of the camera
                 newGun.transform.SetParent(Camera.main.transform); // Make the new gun a child of the camera
@@ -67,7 +68,11 @@ public class GunPickup : MonoBehaviour
                 // Adjust the local position for proper alignment
                 newGun.transform.localPosition = new Vector3(0.419999987f, -0.800000012f, 1.14999998f);
 
-                newGun.SetActive(true); // Make the new gun active
+                // Deactivate the current gun
+                currentGun.SetActive(false);
+
+                // Set the new gun reference in the player movement manager
+                playerMovement.SetNewGun(newGun); // Store the new gun reference
 
                 // Update the player's current gun reference
                 playerMovement.currentGun = newGun; // Update the player's current gun
@@ -76,7 +81,8 @@ public class GunPickup : MonoBehaviour
             }
         }
 
-        // Optionally, destroy or hide the pickup object
+        // Optionally, you can choose to keep or destroy the pickup object
         Destroy(gameObject); // Destroy the pickup object
     }
+
 }

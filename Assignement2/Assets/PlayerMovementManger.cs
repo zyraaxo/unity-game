@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using System.Collections;
+
 
 public class PlayerMovementManager : MonoBehaviour
 {
@@ -11,6 +13,8 @@ public class PlayerMovementManager : MonoBehaviour
     public GameObject regularGun; // The regular gun object
     public GameObject sprintingGun; // The gun to show when sprinting
     public GameObject currentGun; // Reference to the currently equipped gun
+    private GameObject previousGun; // Reference to the previously held gun
+
 
     public PostProcessVolume postProcessVolume; // Reference to the Post Processing Volume
     private DepthOfField depthOfField; // Reference to the Depth of Field effect
@@ -20,6 +24,8 @@ public class PlayerMovementManager : MonoBehaviour
     private bool hasPlayedCooldownSound = false; // To track if the cooldown sound has already played
     public GameObject gunSpawnPoint; // Reference to the gun spawn point
 
+    // Added for toggling guns
+    private bool isUsingRegularGun = true; // To track which gun is currently in use
 
     void Start()
     {
@@ -39,7 +45,7 @@ public class PlayerMovementManager : MonoBehaviour
             Debug.LogWarning("PostProcessVolume is not assigned or found!"); // Warn if not found
         }
 
-        // Ensure the sprinting gun is hidden at the start
+        // Ensure the guns are hidden at the start
         if (sprintingGun != null)
         {
             sprintingGun.SetActive(false); // Hide sprinting gun
@@ -47,6 +53,7 @@ public class PlayerMovementManager : MonoBehaviour
 
         // Initialize the current gun to the regular gun
         currentGun = regularGun;
+        currentGun.SetActive(true); // Show the regular gun at the start
     }
 
     void Update()
@@ -76,9 +83,10 @@ public class PlayerMovementManager : MonoBehaviour
                 walkingSound.Stop(); // Stop the walking sound
             }
 
-            // Check if sprinting and handle gun visibility
+            // Check if sprinting
             if (playerMovement.enableSprint && playerMovement.isSprinting)
             {
+                // Hide both guns when sprinting
                 if (currentGun != null)
                 {
                     currentGun.SetActive(false); // Hide the current gun
@@ -86,7 +94,7 @@ public class PlayerMovementManager : MonoBehaviour
 
                 if (sprintingGun != null)
                 {
-                    sprintingGun.SetActive(true); // Show the sprinting gun
+                    sprintingGun.SetActive(false); // Ensure the sprinting gun is also hidden
                 }
 
                 // Check if stamina is depleted
@@ -122,11 +130,13 @@ public class PlayerMovementManager : MonoBehaviour
             }
             else
             {
+                // Show the current gun when not sprinting
                 if (currentGun != null)
                 {
                     currentGun.SetActive(true); // Show the current gun
                 }
 
+                // Ensure the sprinting gun is hidden
                 if (sprintingGun != null)
                 {
                     sprintingGun.SetActive(false); // Hide the sprinting gun
@@ -172,8 +182,69 @@ public class PlayerMovementManager : MonoBehaviour
                     Debug.Log("Depth of Field deactivated; cooldown finished."); // Log message
                 }
             }
+
+            // Check for Tab key press to switch guns
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                SwitchGuns();
+            }
         }
     }
+    public void SetNewGun(GameObject newGun)
+    {
+        if (newGun != null)
+        {
+            // If there is a current gun, deactivate it and store it as previous gun
+            if (currentGun != null)
+            {
+                previousGun = currentGun; // Save the old gun
+                currentGun.SetActive(false); // Deactivate the current gun
+            }
+
+            currentGun = newGun; // Set the new gun as the current gun
+            currentGun.SetActive(true); // Activate the new gun
+            Debug.Log("Switched to new gun: " + newGun.name);
+        }
+    }
+
+    // Call this method to switch back to the previous gun
+    public void SwitchGuns()
+    {
+        StartCoroutine(SwitchGunsCoroutine());
+    }
+
+    private IEnumerator SwitchGunsCoroutine()
+    {
+        // Get the Animator component of the current gun
+        Animator currentGunAnimator = currentGun.GetComponent<Animator>();
+
+        // Trigger the gun switch animation
+        if (currentGunAnimator != null)
+        {
+            currentGunAnimator.SetBool("isSwitching", true);
+        }
+
+        // Wait for 2 seconds before switching
+        yield return new WaitForSeconds(2f);
+
+        // Swap the guns
+        previousGun.SetActive(true); // Activate previous gun
+        currentGun.SetActive(false); // Deactivate current gun
+
+        // Swap references
+        GameObject temp = currentGun;
+        currentGun = previousGun;
+        previousGun = temp;
+
+        Debug.Log("Switched back to previous gun: " + currentGun.name);
+
+        // Reset the animation trigger after the switch
+        if (currentGunAnimator != null)
+        {
+            currentGunAnimator.SetBool("isSwitching", false);
+        }
+    }
+
 
     public void PickUpGun(GameObject newGunPickup)
     {
@@ -191,5 +262,4 @@ public class PlayerMovementManager : MonoBehaviour
 
         Debug.Log("Picked up a new gun: " + newGunPickup.name);
     }
-
 }
