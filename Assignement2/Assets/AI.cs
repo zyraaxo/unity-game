@@ -1,6 +1,6 @@
 using UnityEngine;
+using UnityEngine.AI;
 using System.Collections;
-
 
 public class MoveTowardsPlayer : MonoBehaviour
 {
@@ -18,6 +18,7 @@ public class MoveTowardsPlayer : MonoBehaviour
     private Animator animator; // Reference to the Animator component
     private AudioSource audioSource; // Reference to the AudioSource component
     private Vector3 patrolTarget; // Target position for patrolling
+    private NavMeshAgent agent; // NavMeshAgent for pathfinding and movement
     private float stoppingDistance = 1.0f; // Distance at which the object stops moving
     private bool isDead = false; // Check if the zombie is dead
 
@@ -35,6 +36,14 @@ public class MoveTowardsPlayer : MonoBehaviour
 
         // Get the AudioSource component attached to this object
         audioSource = GetComponent<AudioSource>();
+
+        // Get the NavMeshAgent component attached to this object
+        agent = GetComponent<NavMeshAgent>();
+        if (agent != null)
+        {
+            agent.speed = speed; // Set movement speed for the NavMeshAgent
+            agent.stoppingDistance = stoppingDistance; // Set the stopping distance
+        }
 
         // If there is an animator, set it to idle by default
         if (animator != null)
@@ -94,15 +103,10 @@ public class MoveTowardsPlayer : MonoBehaviour
 
     void MoveTowardsPlayerTarget()
     {
-        // Calculate the direction to the player
-        Vector3 direction = (player.position - transform.position).normalized;
-
-        // Rotate the object to face the player
-        Quaternion lookRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * speed);
-
-        // Move towards the player
-        transform.position += direction * speed * Time.deltaTime;
+        if (agent != null)
+        {
+            agent.SetDestination(player.position); // Set the player as the destination
+        }
 
         // Trigger moving animation
         if (animator != null)
@@ -120,20 +124,15 @@ public class MoveTowardsPlayer : MonoBehaviour
 
     void Patrol()
     {
-        // Move towards the patrol target
-        Vector3 direction = (patrolTarget - transform.position).normalized;
-
-        // Rotate to face the patrol target
-        Quaternion lookRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * patrolSpeed);
-
-        // Move towards the patrol target at patrol speed
-        transform.position += direction * patrolSpeed * Time.deltaTime;
-
-        // Check if the zombie has reached the patrol target
-        if (Vector3.Distance(transform.position, patrolTarget) < 0.2f)
+        if (agent != null)
         {
-            SetNewPatrolTarget(); // Set a new target if the current one is reached
+            agent.SetDestination(patrolTarget); // Set the patrol target as the destination
+
+            // Check if the zombie has reached the patrol target
+            if (Vector3.Distance(transform.position, patrolTarget) < 0.2f)
+            {
+                SetNewPatrolTarget(); // Set a new target if the current one is reached
+            }
         }
 
         // Trigger patrol animation
@@ -173,6 +172,12 @@ public class MoveTowardsPlayer : MonoBehaviour
         {
             audioSource.clip = attackAudio; // Set the audio clip for attacking
             audioSource.Play(); // Play the attack sound
+        }
+
+        // Stop the NavMeshAgent from moving during attack
+        if (agent != null)
+        {
+            agent.ResetPath(); // Stop moving when attacking
         }
     }
 
@@ -216,6 +221,12 @@ public class MoveTowardsPlayer : MonoBehaviour
         {
             audioSource.clip = deathAudio; // Set the audio clip for dying
             audioSource.Play(); // Play the death sound
+        }
+
+        // Stop the NavMeshAgent from moving
+        if (agent != null)
+        {
+            agent.enabled = false; // Disable the NavMeshAgent
         }
 
         // Wait for the length of the death animation before destroying the object
