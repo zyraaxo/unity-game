@@ -14,6 +14,7 @@ public class PlayerMovementManager : MonoBehaviour
     public GameObject sprintingGun; // The gun to show when sprinting
     public GameObject currentGun; // Reference to the currently equipped gun
     private GameObject previousGun; // Reference to the previously held gun
+    public GameObject switchWeaponText;
 
 
     public PostProcessVolume postProcessVolume; // Reference to the Post Processing Volume
@@ -187,6 +188,7 @@ public class PlayerMovementManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Tab))
             {
                 SwitchGuns();
+                switchWeaponText.SetActive(false);
             }
         }
     }
@@ -225,7 +227,7 @@ public class PlayerMovementManager : MonoBehaviour
         }
 
         // Wait for 2 seconds before switching
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         // Swap the guns
         previousGun.SetActive(true); // Activate previous gun

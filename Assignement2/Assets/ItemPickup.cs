@@ -8,7 +8,7 @@ public class GunPickup : MonoBehaviour
     public GameObject positionReference; // The reference GameObject for positioning the new gun
 
     // Reference to the UI Text
-    public GameObject pickupText; // Assign this in the Inspector
+    public GameObject pickupText;
 
     void Update()
     {
@@ -28,6 +28,7 @@ public class GunPickup : MonoBehaviour
         if (other.CompareTag("Player")) // Ensure the player has the "Player" tag
         {
             isPlayerInRange = true;
+            pickupText.SetActive(true); // Show pickup text
         }
     }
 
@@ -37,6 +38,7 @@ public class GunPickup : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerInRange = false;
+            pickupText.SetActive(false); // Hide pickup text
         }
     }
 
@@ -84,5 +86,4 @@ public class GunPickup : MonoBehaviour
         // Optionally, you can choose to keep or destroy the pickup object
         Destroy(gameObject); // Destroy the pickup object
     }
-
 }

@@ -11,8 +11,10 @@ public class MoveTowardsPlayer : MonoBehaviour
     public AudioClip moveAudio; // Audio clip for moving
     public AudioClip attackAudio; // Audio clip for attacking
     public AudioClip deathAudio; // Audio clip for dying
+    public AudioClip hitAudio; // Audio clip for hit sound
     public float health = 100.0f; // Zombie's health
     public float damageAmount = 10.0f; // Amount of damage per bullet hit
+    [SerializeField] GameObject bloodPrefab; // Blood prefab
 
     private Transform player;  // Reference to the player Transform
     private Animator animator; // Reference to the Animator component
@@ -54,13 +56,6 @@ public class MoveTowardsPlayer : MonoBehaviour
 
         // Set initial patrol target
         SetNewPatrolTarget();
-
-        // Configure the audio source
-        if (audioSource != null)
-        {
-            audioSource.clip = moveAudio; // Set the audio clip for moving
-            audioSource.loop = true; // Enable looping
-        }
     }
 
     void Update()
@@ -114,12 +109,6 @@ public class MoveTowardsPlayer : MonoBehaviour
             animator.SetBool("isMoving", true);
             animator.SetBool("isPatrolling", false); // Stop patrolling animation
         }
-
-        // Play moving audio if not already playing
-        if (audioSource != null && !audioSource.isPlaying)
-        {
-            audioSource.Play(); // Play the moving sound
-        }
     }
 
     void Patrol()
@@ -140,12 +129,6 @@ public class MoveTowardsPlayer : MonoBehaviour
         {
             animator.SetBool("isMoving", false); // Stop moving animation
             animator.SetBool("isPatrolling", true); // Start patrolling animation
-        }
-
-        // Stop moving audio when patrolling
-        if (audioSource != null && audioSource.isPlaying)
-        {
-            audioSource.Stop(); // Stop the moving sound when patrolling
         }
     }
 
@@ -189,6 +172,12 @@ public class MoveTowardsPlayer : MonoBehaviour
         {
             TakeDamage(damageAmount);
 
+            // Play the hit audio
+            PlayHitAudio();
+
+            // Play the blood effect at the zombie's position
+            DamageEffects();
+
             // Destroy the bullet after it hits
             Destroy(other.gameObject);
         }
@@ -203,6 +192,24 @@ public class MoveTowardsPlayer : MonoBehaviour
         if (health <= 0f)
         {
             StartCoroutine(Die()); // Call coroutine to handle death animation and destruction
+        }
+    }
+
+    public void DamageEffects()
+    {
+        if (bloodPrefab != null)
+        {
+            GameObject bloodEffect = Instantiate(bloodPrefab, transform.position, Quaternion.identity);
+            Destroy(bloodEffect, 2f); // Destroy the blood effect after 2 seconds
+        }
+    }
+
+    // Play hit audio
+    void PlayHitAudio()
+    {
+        if (hitAudio != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(hitAudio); // Play the hit sound effect
         }
     }
 

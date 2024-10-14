@@ -4,7 +4,7 @@ public class BulletMove : MonoBehaviour
 {
     private Rigidbody rb;
     [SerializeField] private float bulletSpeed = 30f; // Adjust the speed as needed
-    [SerializeField] private float additionalForce = 1000f; // Force to apply to the bullet
+    [SerializeField] private float additionalForce = 1000f;
 
     // Move bullet forward
     void Start()

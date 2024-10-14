@@ -51,8 +51,8 @@ public class InventoryManager : MonoBehaviour
             }
 
             GameObject gunButton = Instantiate(gunButtonPrefab, inventoryContent);
-            gunButton.GetComponentInChildren<Text>().text = gun.gunName; // Updated to use gun.gunName
-                                                                         // (rest of the code remains the same...)
+            //gunButton.GetComponentInChildren<Text>().text = gun.gunName; // Updated to use gun.gunName
+            // (rest of the code remains the same...)
         }
 
         // Update layout manually

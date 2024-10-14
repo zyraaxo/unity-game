@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using StarterAssets;
+using System;
 
 public class Gun : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class Gun : MonoBehaviour
     // Reference to the bullet spawn point
     [SerializeField]
     private Transform bulletPoint;
+
+    public ParticleSystem muzzleFlash;
 
 
     [SerializeField]
@@ -35,6 +38,8 @@ public class Gun : MonoBehaviour
         {
             Shoot();
             _input.shoot = false;
+            Console.WriteLine("Shot gun");
+
         }
     }
 
@@ -44,7 +49,9 @@ public class Gun : MonoBehaviour
         bullet.GetComponent<Rigidbody>().AddForce(bulletPoint.forward * bSpeed);
 
 
+
         audioSource.Play();
+        muzzleFlash.Play();
         Destroy(bullet, 1);
     }
 
