@@ -5,7 +5,7 @@ public class PlayerHealth : MonoBehaviour
 {
     public float maxHealth = 100f; // Maximum health of the player
     public float currentHealth; // Current health of the player
-    public Image healthBar; // Reference to the health bar image
+    public Slider healthBar; // Reference to the health bar slider
 
     void Start()
     {
@@ -15,6 +15,8 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(float damageAmount)
     {
+
+        Debug.Log("Called" + currentHealth);
         currentHealth -= damageAmount; // Reduce health
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); // Clamp health to valid range
         UpdateHealthBar();
@@ -37,7 +39,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (healthBar != null)
         {
-            healthBar.fillAmount = currentHealth / maxHealth; // Update the health bar fill amount
+            healthBar.value = currentHealth; // Set the slider value to current health
         }
     }
 

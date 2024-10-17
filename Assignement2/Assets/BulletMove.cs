@@ -22,7 +22,7 @@ public class BulletMove : MonoBehaviour
         // Perform a raycast in the forward direction
         RaycastHit hit;
         // The raycast length is set to 3.0f
-        if (Physics.Raycast(transform.position, transform.forward, out hit, 3.0f))
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 30.0f))
         {
             // Log the name of the object hit
             Debug.Log("Bullet hit: " + hit.collider.gameObject.name);

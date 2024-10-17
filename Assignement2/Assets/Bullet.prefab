@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.3267, y: -0.44327104, z: -0.4269297}
-  m_LocalScale: {x: 0.07326227, y: 0.047447, z: 0.3297573}
+  m_LocalScale: {x: 0.17589536, y: 0.18005188, z: 0.40283155}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -146,5 +146,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 275d7482ff50fbb41896e3661e51a90d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 30
-  additionalForce: 1000
+  bulletSpeed: 100
+  additionalForce: 2000
