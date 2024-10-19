@@ -53,7 +53,7 @@ public class Fireball : MonoBehaviour
         if (collisionParticle != null)
         {
             GameObject particleInstance = Instantiate(collisionParticle, transform.position, Quaternion.identity);
-            Destroy(particleInstance, 1f); // Destroy the particle effect after 1 second
+            Destroy(particleInstance, 2f); // Destroy the particle effect after 1 second
         }
 
         // Explode and apply damage within the explosion radius

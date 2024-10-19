@@ -124,6 +124,10 @@ MonoBehaviour:
   damage: 10
   collisionParticle: {fileID: 5279869418025022388, guid: 400ec4e161b37304a9776acc554e4c89, type: 3}
   impactSound: {fileID: 8300000, guid: 20acfab951741604cbd45ad84f43fb67, type: 3}
+  explosionRadius: 10
+  damageableLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!54 &7450456407976093180
 Rigidbody:
   m_ObjectHideFlags: 0

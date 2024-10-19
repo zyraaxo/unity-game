@@ -40,7 +40,7 @@ public class FireballSpawner : MonoBehaviour
             rb.AddForce(direction * bSpeed, ForceMode.Impulse); // Shoot the fireball toward the player
         }
 
-        // Optional: Play audio and particle effects
+        //Play audio and particle effects
         if (audioSource != null)
         {
             audioSource.Play();
@@ -51,17 +51,17 @@ public class FireballSpawner : MonoBehaviour
             muzzleFlash.Play();
         }
 
-        // Destroy the fireball after 10 seconds
         Destroy(fireball, 10f);
     }
 
-    // Optional: Coroutine to shoot fireballs automatically at intervals
+    // Coroutine to shoot fireballs automatically at intervals
     private IEnumerator ShootFireballRoutine()
     {
         while (true)
         {
             Shoot();
-            yield return new WaitForSeconds(2f); // Adjust the interval as needed
+            float waitTime = Random.Range(3f, 10f);
+            yield return new WaitForSeconds(waitTime);
         }
     }
 }
