@@ -1,7 +1,13 @@
 # unity-game
-Sort animation
+Sort animation for zombies death and attck on the mpa scene and d scene 
+Expolsive sound effect not work, fireball prefab
+boss attack sound effect on attack aniamtion in boss script
 
-add gun damage / enemy health
+
+
+
+
+
 
 Add random health pickups/ buffs
 UI for ammo, health etc
