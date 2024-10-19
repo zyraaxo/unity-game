@@ -6,7 +6,7 @@ boss attack sound effect on attack aniamtion in boss script
 
 
 
-
+For Noah: Sort audio
 
 
 Add random health pickups/ buffs
