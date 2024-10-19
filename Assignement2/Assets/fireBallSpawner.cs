@@ -14,7 +14,7 @@ public class FireballSpawner : MonoBehaviour
     void Start()
     {
         // Optional: Start shooting fireballs automatically (e.g., every 2 seconds)
-        // StartCoroutine(ShootFireballRoutine());
+        StartCoroutine(ShootFireballRoutine());
     }
 
     void Update()

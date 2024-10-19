@@ -4,13 +4,25 @@ public class Fireball : MonoBehaviour
 {
     public float speed = 10f; // Speed of the fireball
     public int damage = 10; // Damage dealt by the fireball
-
+    public GameObject collisionParticle; // Reference to the particle effect
+    public AudioClip impactSound; // Reference to the impact sound
+    private AudioSource audioSource; // Audio source to play the sound
     private Transform target; // Reference to the target (the player)
+
+    public float explosionRadius = 5f; // Radius for the explosion effect
+    public LayerMask damageableLayers; // Layers that can be damaged by the explosion
 
     // Set the target for the fireball
     public void Initialize(Transform player)
     {
         target = player;
+    }
+
+    void Start()
+    {
+        // Add an AudioSource component if not already present
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false; // Don't play the sound on start
     }
 
     void Update()
@@ -31,18 +43,47 @@ public class Fireball : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        // Check if the fireball collides with the player
-        if (collision.gameObject.CompareTag("Player")) // Ensure your player has the "Player" tag
+        // Play impact sound
+        if (impactSound != null)
         {
-            // Optionally, you can call the TakeDamage method on the player's health component
-            PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
-            {
-                playerHealth.TakeDamage(10); // Adjust the damage amount as necessary
-            }
+            audioSource.PlayOneShot(impactSound);
         }
 
-        // Destroy the fireball on collision with any object
+        // Spawn the particle effect
+        if (collisionParticle != null)
+        {
+            GameObject particleInstance = Instantiate(collisionParticle, transform.position, Quaternion.identity);
+            Destroy(particleInstance, 1f); // Destroy the particle effect after 1 second
+        }
+
+        // Explode and apply damage within the explosion radius
+        Explode();
+
+        // Destroy the fireball on collision
         Destroy(gameObject);
+    }
+
+    // Explosion logic that applies damage to nearby objects
+    private void Explode()
+    {
+        // Find all objects within the explosion radius
+        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, damageableLayers);
+
+        foreach (Collider nearbyObject in colliders)
+        {
+            // Check if the nearby object is the player or any damageable object
+            PlayerHealth playerHealth = nearbyObject.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(damage); // Deal damage to the player
+            }
+        }
+    }
+
+    // Optional: Visualize the explosion radius in the Unity editor
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, explosionRadius);
     }
 }
