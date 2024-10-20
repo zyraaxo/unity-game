@@ -8,6 +8,7 @@ public class HealthPickup : MonoBehaviour
         transform.Rotate(0, 100f * Time.deltaTime, 0);
     }
 
+
     // This function is called when the player collides with the object
     void OnCollisionEnter(Collision collision)
     {

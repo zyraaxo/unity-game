@@ -7,11 +7,10 @@ public class AudioManager : MonoBehaviour
     public AudioClip pickupSound; // Sound for pickups
     public AudioClip jumpSound; // Sound for jumping
     public AudioClip shootSound; // Sound for shooting
-    public AudioClip expolsionSound; // Sound for shooting
-    public AudioClip growlSound; // Sound for shooting
-    public AudioClip deathSound; // Sound for shooting
-
-
+    public AudioClip explosionSound; // Sound for explosions
+    public AudioClip growlSound; // Sound for growls
+    public AudioClip deathSound; // Sound for death
+    public AudioClip bossMusic; // Sound for boss music
 
     // Add more audio clips as needed
 
@@ -40,6 +39,40 @@ public class AudioManager : MonoBehaviour
         if (clip != null)
         {
             audioSource.PlayOneShot(clip);
+        }
+    }
+
+    // Method to play looping background music
+    public void PlayMusic(AudioClip clip)
+    {
+        if (clip != null)
+        {
+            audioSource.clip = clip;
+            audioSource.loop = true;
+            audioSource.Play();
+        }
+    }
+
+    // Method to stop music
+    public void StopMusic()
+    {
+        if (audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
+    }
+
+    // Play boss music when the scene starts
+    void Start()
+    {
+        // Check if bossMusic is assigned and play it
+        if (bossMusic != null)
+        {
+            PlayMusic(bossMusic); // Play boss music on scene start
+        }
+        else
+        {
+            Debug.LogError("Boss music AudioClip is not assigned in the AudioManager!");
         }
     }
 }

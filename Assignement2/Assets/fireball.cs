@@ -48,13 +48,13 @@ public class Fireball : MonoBehaviour
         {
             Debug.LogError("AudioManager instance is null! Make sure the AudioManager is present in the scene.");
         }
-        else if (AudioManager.Instance.expolsionSound == null)
+        else if (AudioManager.Instance.explosionSound == null)
         {
             Debug.LogError("expolsionSound is null! Please assign an audio clip in the AudioManager.");
         }
         else
         {
-            AudioManager.Instance.PlaySound(AudioManager.Instance.expolsionSound);
+            AudioManager.Instance.PlaySound(AudioManager.Instance.explosionSound);
         }
 
         // Spawn the particle effect
