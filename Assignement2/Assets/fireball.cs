@@ -44,9 +44,17 @@ public class Fireball : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         // Play impact sound
-        if (impactSound != null)
+        if (AudioManager.Instance == null)
         {
-            audioSource.PlayOneShot(impactSound);
+            Debug.LogError("AudioManager instance is null! Make sure the AudioManager is present in the scene.");
+        }
+        else if (AudioManager.Instance.expolsionSound == null)
+        {
+            Debug.LogError("expolsionSound is null! Please assign an audio clip in the AudioManager.");
+        }
+        else
+        {
+            AudioManager.Instance.PlaySound(AudioManager.Instance.expolsionSound);
         }
 
         // Spawn the particle effect

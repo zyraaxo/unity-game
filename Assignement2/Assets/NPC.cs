@@ -214,17 +214,33 @@ public class NPCMovement : MonoBehaviour
 
     void PlayGrowlSound()
     {
-        if (!growlSound.isPlaying)
+        if (AudioManager.Instance == null)
         {
-            growlSound.Play();
+            Debug.LogError("AudioManager instance is null! Make sure the AudioManager is present in the scene.");
+        }
+        else if (AudioManager.Instance.growlSound == null)
+        {
+            Debug.LogError("growlSound is null! Please assign an audio clip in the AudioManager.");
+        }
+        else
+        {
+            AudioManager.Instance.PlaySound(AudioManager.Instance.growlSound);
         }
     }
 
     void PlayDeathSound()
     {
-        if (!deathSound.isPlaying)
+        if (AudioManager.Instance == null)
         {
-            deathSound.Play();
+            Debug.LogError("AudioManager instance is null! Make sure the AudioManager is present in the scene.");
+        }
+        else if (AudioManager.Instance.deathSound == null)
+        {
+            Debug.LogError("deathSound is null! Please assign an audio clip in the AudioManager.");
+        }
+        else
+        {
+            AudioManager.Instance.PlaySound(AudioManager.Instance.deathSound);
         }
     }
     void PlayAttackSound()

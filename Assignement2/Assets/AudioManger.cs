@@ -7,6 +7,12 @@ public class AudioManager : MonoBehaviour
     public AudioClip pickupSound; // Sound for pickups
     public AudioClip jumpSound; // Sound for jumping
     public AudioClip shootSound; // Sound for shooting
+    public AudioClip expolsionSound; // Sound for shooting
+    public AudioClip growlSound; // Sound for shooting
+    public AudioClip deathSound; // Sound for shooting
+
+
+
     // Add more audio clips as needed
 
     private AudioSource audioSource; // AudioSource to play sounds
