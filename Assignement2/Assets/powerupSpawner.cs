@@ -4,31 +4,42 @@ using UnityEngine;
 
 public class PowerupSpawner : MonoBehaviour
 {
-    public GameObject powerupPrefab; // The powerup prefab to spawn
-    public Terrain terrain;          // Reference to the terrain
-    public int maxPowerups = 5;      // Maximum number of powerups on the terrain
-    public float spawnInterval = 10f; // Time interval between spawns
+    public GameObject healthPowerupPrefab; // The health powerup prefab to spawn
+    public GameObject speedPowerupPrefab;   // The speed powerup prefab to spawn
 
-    private List<GameObject> activePowerups = new List<GameObject>(); // List to track active powerups
+    public Terrain terrain;                  // Reference to the terrain
+    public int maxHealthPowerups = 5;       // Maximum number of health powerups on the terrain
+    public int maxSpeedPowerups = 3;        // Maximum number of speed powerups on the terrain
+    public float spawnInterval = 10f;        // Time interval between spawns
+
+    private List<GameObject> activeHealthPowerups = new List<GameObject>(); // List to track active health powerups
+    private List<GameObject> activeSpeedPowerups = new List<GameObject>();   // List to track active speed powerups
 
     void Start()
     {
         // Spawn the initial set of powerups
-        SpawnPowerups(maxPowerups);
+        SpawnPowerups(maxHealthPowerups, healthPowerupPrefab);
+        SpawnPowerups(maxSpeedPowerups, speedPowerupPrefab);
 
         // Start the coroutine to spawn more powerups over time
         StartCoroutine(SpawnPowerupsOverTime());
     }
 
-    void SpawnPowerups(int count)
+    void SpawnPowerups(int count, GameObject powerupPrefab)
     {
         for (int i = 0; i < count; i++)
         {
-            if (activePowerups.Count < maxPowerups)
+            if (powerupPrefab == healthPowerupPrefab && activeHealthPowerups.Count < maxHealthPowerups)
             {
                 Vector3 spawnPosition = GetRandomPositionOnTerrain();
                 GameObject newPowerup = Instantiate(powerupPrefab, spawnPosition, Quaternion.identity);
-                activePowerups.Add(newPowerup);
+                activeHealthPowerups.Add(newPowerup);
+            }
+            else if (powerupPrefab == speedPowerupPrefab && activeSpeedPowerups.Count < maxSpeedPowerups)
+            {
+                Vector3 spawnPosition = GetRandomPositionOnTerrain();
+                GameObject newPowerup = Instantiate(powerupPrefab, spawnPosition, Quaternion.identity);
+                activeSpeedPowerups.Add(newPowerup);
             }
         }
     }
@@ -52,7 +63,6 @@ public class PowerupSpawner : MonoBehaviour
         return new Vector3(randomX, yPos + 1, randomZ);
     }
 
-
     // Coroutine to spawn more powerups over time
     IEnumerator SpawnPowerupsOverTime()
     {
@@ -60,13 +70,18 @@ public class PowerupSpawner : MonoBehaviour
         {
             yield return new WaitForSeconds(spawnInterval);
 
-            // Remove any null powerups from the list (e.g., if a powerup was picked up or destroyed)
-            activePowerups.RemoveAll(powerup => powerup == null);
+            // Remove any null powerups from the lists
+            activeHealthPowerups.RemoveAll(powerup => powerup == null);
+            activeSpeedPowerups.RemoveAll(powerup => powerup == null);
 
-            // Spawn more powerups if the total is below the maximum
-            if (activePowerups.Count < maxPowerups)
+            // Spawn more powerups if the total is below the maximum for each type
+            if (activeHealthPowerups.Count < maxHealthPowerups)
             {
-                SpawnPowerups(1); // Spawn one powerup at a time
+                SpawnPowerups(1, healthPowerupPrefab); // Spawn one health powerup at a time
+            }
+            if (activeSpeedPowerups.Count < maxSpeedPowerups)
+            {
+                SpawnPowerups(1, speedPowerupPrefab); // Spawn one speed powerup at a time
             }
         }
     }
