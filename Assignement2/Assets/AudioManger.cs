@@ -11,6 +11,12 @@ public class AudioManager : MonoBehaviour
     public AudioClip growlSound; // Sound for growls
     public AudioClip deathSound; // Sound for death
     public AudioClip bossMusic; // Sound for boss music
+    public AudioClip slamSound; // Sound for boss music
+    public AudioClip zombieSound; // Sound for boss music
+    public AudioClip attackAudio; // Sound for boss music
+
+
+
 
     // Add more audio clips as needed
 
@@ -66,13 +72,13 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         // Check if bossMusic is assigned and play it
-        if (bossMusic != null)
-        {
-            PlayMusic(bossMusic); // Play boss music on scene start
-        }
-        else
-        {
-            Debug.LogError("Boss music AudioClip is not assigned in the AudioManager!");
-        }
+        // if (bossMusic != null)
+        //  {
+        //     PlayMusic(bossMusic); // Play boss music on scene start
+        //  }
+        //   else
+        // {
+        Debug.LogError("Boss music AudioClip is not assigned in the AudioManager!");
+        // }
     }
 }

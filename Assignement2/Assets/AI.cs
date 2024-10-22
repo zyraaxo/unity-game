@@ -37,7 +37,6 @@ public class MoveTowardsPlayer : MonoBehaviour
         animator = GetComponent<Animator>();
 
         // Get the AudioSource component attached to this object
-        audioSource = GetComponent<AudioSource>();
 
         // Get the NavMeshAgent component attached to this object
         agent = GetComponent<NavMeshAgent>();
@@ -101,6 +100,8 @@ public class MoveTowardsPlayer : MonoBehaviour
         if (agent != null)
         {
             agent.SetDestination(player.position); // Set the player as the destination
+            PlayGrowlSound();
+
         }
 
         // Trigger moving animation
@@ -130,7 +131,11 @@ public class MoveTowardsPlayer : MonoBehaviour
             animator.SetBool("isMoving", false); // Stop moving animation
             animator.SetBool("isPatrolling", true); // Start patrolling animation
         }
+
+        // Play patrol audio if not already playing
+
     }
+
 
     void SetNewPatrolTarget()
     {
@@ -141,7 +146,22 @@ public class MoveTowardsPlayer : MonoBehaviour
             transform.position.z + Random.Range(-patrolRadius, patrolRadius)
         );
     }
+    void PlayGrowlSound()
+    {
+        if (AudioManager.Instance == null)
+        {
+            Debug.LogError("AudioManager instance is null! Make sure the AudioManager is present in the scene.");
+        }
+        else if (AudioManager.Instance.attackAudio == null)
+        {
+            Debug.LogError("attackAudio is null! Please assign an audio clip in the AudioManager.");
+        }
+        else
+        {
+            AudioManager.Instance.PlaySound(AudioManager.Instance.attackAudio);
+        }
 
+    }
     void AttackPlayer()
     {
         // Logic to attack the player, e.g., dealing damage
@@ -151,11 +171,7 @@ public class MoveTowardsPlayer : MonoBehaviour
         }
 
         // Play attack audio
-        if (audioSource != null && !audioSource.isPlaying)
-        {
-            audioSource.clip = attackAudio; // Set the audio clip for attacking
-            audioSource.Play(); // Play the attack sound
-        }
+        // PlayGrowlSound();
 
         // Stop the NavMeshAgent from moving during attack
         if (agent != null)

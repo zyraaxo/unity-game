@@ -4,16 +4,14 @@ using UnityEngine;
 
 public class PowerupSpawner : MonoBehaviour
 {
-    public GameObject healthPowerupPrefab; // The health powerup prefab to spawn
-    public GameObject speedPowerupPrefab;   // The speed powerup prefab to spawn
-
-    public Terrain terrain;                  // Reference to the terrain
-    public int maxHealthPowerups = 5;       // Maximum number of health powerups on the terrain
-    public int maxSpeedPowerups = 3;        // Maximum number of speed powerups on the terrain
-    public float spawnInterval = 10f;        // Time interval between spawns
-
-    private List<GameObject> activeHealthPowerups = new List<GameObject>(); // List to track active health powerups
-    private List<GameObject> activeSpeedPowerups = new List<GameObject>();   // List to track active speed powerups
+    public GameObject healthPowerupPrefab;
+    public GameObject speedPowerupPrefab;
+    public Terrain terrain;
+    public int maxHealthPowerups = 5;
+    public int maxSpeedPowerups = 3;
+    public float spawnInterval = 10f;
+    private List<GameObject> activeHealthPowerups = new List<GameObject>();
+    private List<GameObject> activeSpeedPowerups = new List<GameObject>();
 
     void Start()
     {
@@ -21,7 +19,6 @@ public class PowerupSpawner : MonoBehaviour
         SpawnPowerups(maxHealthPowerups, healthPowerupPrefab);
         SpawnPowerups(maxSpeedPowerups, speedPowerupPrefab);
 
-        // Start the coroutine to spawn more powerups over time
         StartCoroutine(SpawnPowerupsOverTime());
     }
 
@@ -44,7 +41,6 @@ public class PowerupSpawner : MonoBehaviour
         }
     }
 
-    // Get a random position on the terrain
     Vector3 GetRandomPositionOnTerrain()
     {
         float terrainWidth = terrain.terrainData.size.x;
@@ -57,7 +53,6 @@ public class PowerupSpawner : MonoBehaviour
         // Get the terrain height at the random position (y-axis)
         float yPos = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
 
-        // Add terrain's actual position.y to adjust the height correctly relative to the world position
         yPos += terrain.transform.position.y;
 
         return new Vector3(randomX, yPos + 1, randomZ);
@@ -70,14 +65,12 @@ public class PowerupSpawner : MonoBehaviour
         {
             yield return new WaitForSeconds(spawnInterval);
 
-            // Remove any null powerups from the lists
             activeHealthPowerups.RemoveAll(powerup => powerup == null);
             activeSpeedPowerups.RemoveAll(powerup => powerup == null);
 
-            // Spawn more powerups if the total is below the maximum for each type
             if (activeHealthPowerups.Count < maxHealthPowerups)
             {
-                SpawnPowerups(1, healthPowerupPrefab); // Spawn one health powerup at a time
+                SpawnPowerups(1, healthPowerupPrefab);
             }
             if (activeSpeedPowerups.Count < maxSpeedPowerups)
             {

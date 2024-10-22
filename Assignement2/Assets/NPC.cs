@@ -151,7 +151,7 @@ public class NPCMovement : MonoBehaviour
         animator.SetBool("isIdle", true);
 
         // Stand still for 7 seconds
-        yield return new WaitForSeconds(7f);
+        yield return new WaitForSeconds(9f);
 
         // After waiting, move towards the player
         RunTowardsPlayer(); // Ensure boss continues moving towards the player
@@ -165,16 +165,7 @@ public class NPCMovement : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
         return distanceToPlayer <= attackRange; // Return true if within range
     }
-    IEnumerator HoldPositionBeforeMoving()
-    {
 
-        yield return new WaitForSeconds(5.0f); // Adjust buffer time as necessary
-
-        // After the buffer time, move towards the player
-        RunTowardsPlayer(); // Ensure boss continues moving towards the player
-
-        isAttacking = false; // Reset attacking state
-    }
 
 
 
@@ -245,9 +236,17 @@ public class NPCMovement : MonoBehaviour
     }
     void PlayAttackSound()
     {
-        if (!slam.isPlaying)
+        if (AudioManager.Instance == null)
         {
-            slam.Play();
+            Debug.LogError("AudioManager instance is null! Make sure the AudioManager is present in the scene.");
+        }
+        else if (AudioManager.Instance.slamSound == null)
+        {
+            Debug.LogError("slamSound is null! Please assign an audio clip in the AudioManager.");
+        }
+        else
+        {
+            AudioManager.Instance.PlaySound(AudioManager.Instance.slamSound);
         }
     }
 
