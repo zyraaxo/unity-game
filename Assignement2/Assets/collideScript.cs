@@ -11,6 +11,7 @@ public class DoorTrigger : MonoBehaviour
         if (other.CompareTag("Player")) // Check if the player entered the trigger
         {
             SwitchCamera(); // Switch to the main camera
+            Debug.Log("Player Entered door");
         }
     }
 

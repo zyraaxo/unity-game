@@ -9,6 +9,9 @@ public class Shooting : MonoBehaviour
     private AudioSource audioSource; // Reference to the AudioSource
     [SerializeField] private float fireRate = 0.2f; // Fire rate in seconds
     private float nextFireTime = 0f; // Track the next time we can fire
+#pragma warning disable CS0436 // Type conflicts with imported type
+    FirstPersonController check;
+#pragma warning restore CS0436 // Type conflicts with imported type
 
     void Start()
     {
@@ -28,12 +31,13 @@ public class Shooting : MonoBehaviour
 
     void Shoot()
     {
-        // Instantiate the bullet
+
         Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
 
         // Instantiate the muzzle flash
         GameObject muzzleFlash = Instantiate(muzzleFlashPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
         Destroy(muzzleFlash, 1f); // Destroy the muzzle flash after 1 second (adjust as needed)
+
 
         // Play the gun sound
         PlayGunSound();

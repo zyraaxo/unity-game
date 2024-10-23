@@ -1,14 +1,14 @@
 using UnityEngine;
 using TMPro; // Make sure you import the TextMeshPro namespace
-using System.Collections; // For IEnumerator
+using System.Collections;
+using System; // For IEnumerator
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance; // Singleton instance
     public TextMeshProUGUI healthRestoredText; // Reference to the TextMeshProUGUI object
     public TextMeshProUGUI speedBoostText; // Reference to the TextMeshProUGUI object for speed boost
-    public TextMeshProUGUI keyCheckText; // Reference to the TextMeshProUGUI object for speed boost
-
+    public TextMeshProUGUI keyCheckText; // Reference to the TextMeshProUGUI object for key check
 
     void Awake()
     {
@@ -71,4 +71,48 @@ public class UIManager : MonoBehaviour
             Debug.LogError("speedBoostText is not assigned in the Inspector!");
         }
     }
+
+    // Method to show key check message
+    public void ShowKeyCheckText(int missingKeys)
+    {
+        if (keyCheckText != null)
+        {
+            keyCheckText.text = "You need " + missingKeys + " more key" + (missingKeys > 1 ? "s" : "") + " to activate portal!";
+            keyCheckText.gameObject.SetActive(true); // Activate the TextMeshPro object
+
+            // Optionally, you can hide this message after a certain duration
+            StartCoroutine(HideKeyCheckTextAfterDelay(5f)); // Hide after 5 seconds
+        }
+        else
+        {
+            Debug.LogError("keyCheckText is not assigned in the Inspector!");
+        }
+    }
+
+    private IEnumerator HideKeyCheckTextAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        keyCheckText.gameObject.SetActive(false); // Deactivate the TextMeshPro object
+    }
+
+    public void ShowKeyCheckText(string message)
+    {
+        if (keyCheckText != null)
+        {
+            keyCheckText.text = message; // Set the text to the provided message
+            keyCheckText.gameObject.SetActive(true); // Show the text
+            StartCoroutine(HideKeyCheckTextRoutine()); // Optionally hide it after some time
+        }
+        else
+        {
+            Debug.LogError("keyCheckText is not assigned in the Inspector!");
+        }
+    }
+
+    private IEnumerator HideKeyCheckTextRoutine()
+    {
+        yield return new WaitForSeconds(3f); // Adjust duration as needed
+        keyCheckText.gameObject.SetActive(false); // Hide the text
+    }
+
 }
