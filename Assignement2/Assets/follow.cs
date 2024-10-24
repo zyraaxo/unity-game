@@ -43,6 +43,7 @@ public class MinimapFollow : MonoBehaviour
             minimapImage.rectTransform.sizeDelta = new Vector2(400, 400); // Adjust size for the large minimap
             minimapImage.rectTransform.position = new Vector3(Screen.width / 2, Screen.height / 2, 0);
             minimapIcon.transform.localScale = new Vector3(100f, 100f, 1f); // Scale the icon to 10 times its size
+
         }
         else
         {
@@ -50,6 +51,7 @@ public class MinimapFollow : MonoBehaviour
             minimapImage.rectTransform.position = new Vector3(Screen.width - (minimapImage.rectTransform.sizeDelta.x / 2) - 20, Screen.height - (minimapImage.rectTransform.sizeDelta.y / 2) - 20, 0);
             minimapCamera.orthographicSize = 27;
             minimapIcon.transform.localScale = new Vector3(10f, 10f, 10f); // Reset the icon size to original
+
         }
     }
 

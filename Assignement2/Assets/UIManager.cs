@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI healthRestoredText; // Reference to the TextMeshProUGUI object
     public TextMeshProUGUI speedBoostText; // Reference to the TextMeshProUGUI object for speed boost
     public TextMeshProUGUI keyCheckText; // Reference to the TextMeshProUGUI object for key check
+    public TextMeshProUGUI keyPickupText;
 
     void Awake()
     {
