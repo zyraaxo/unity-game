@@ -1,7 +1,6 @@
 using UnityEngine;
-using TMPro; // Make sure you import the TextMeshPro namespace
+using TMPro; // Make sure to import the TextMeshPro namespace
 using System.Collections;
-using System; // For IEnumerator
 
 public class UIManager : MonoBehaviour
 {
@@ -9,7 +8,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI healthRestoredText; // Reference to the TextMeshProUGUI object
     public TextMeshProUGUI speedBoostText; // Reference to the TextMeshProUGUI object for speed boost
     public TextMeshProUGUI keyCheckText; // Reference to the TextMeshProUGUI object for key check
-    public TextMeshProUGUI keyPickupText;
+    public TextMeshProUGUI keyPickupText; // Reference to the TextMeshProUGUI object for key pickup
 
     void Awake()
     {
@@ -21,6 +20,29 @@ public class UIManager : MonoBehaviour
         else
         {
             Destroy(gameObject); // Prevent duplicate instances
+        }
+    }
+
+    // Method to show key pickup message
+    public void ShowKeyPickupText(string message)
+    {
+        if (keyPickupText != null)
+        {
+            keyPickupText.text = message; // Set the text to the provided message
+            keyPickupText.gameObject.SetActive(true); // Show the text
+        }
+        else
+        {
+            Debug.LogError("keyPickupText is not assigned in the Inspector!");
+        }
+    }
+
+    // Method to hide the key pickup message
+    public void HideKeyPickupText()
+    {
+        if (keyPickupText != null)
+        {
+            keyPickupText.gameObject.SetActive(false); // Deactivate the TextMeshPro object
         }
     }
 
@@ -115,5 +137,4 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(3f); // Adjust duration as needed
         keyCheckText.gameObject.SetActive(false); // Hide the text
     }
-
 }

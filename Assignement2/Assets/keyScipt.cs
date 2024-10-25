@@ -1,20 +1,14 @@
 using UnityEngine;
-using TMPro; // Make sure to include this if you're using TextMeshPro
 
 public class KeyScript : MonoBehaviour
 {
     public float activationDistance = 5f; // Distance within which the key can be activated
-    public TextMeshProUGUI uiText; // Reference to the TextMeshProUGUI object for displaying messages
     private Player player; // Reference to the Player instance
 
     private void Start()
     {
         player = Player.Instance;
-
-        if (uiText != null)
-        {
-            uiText.gameObject.SetActive(false);
-        }
+        UIManager.Instance.HideKeyPickupText(); // Ensure the pickup text is hidden at start
     }
 
     private void Update()
@@ -23,38 +17,32 @@ public class KeyScript : MonoBehaviour
 
         if (distance < activationDistance)
         {
-            ShowUIText("Press E to pick up the key!");
+            ShowPickupText("Press E to pick up the key!");
 
             if (Input.GetKeyDown(KeyCode.E))
             {
                 player.AddKey();
                 Debug.Log("Key collected! Total keys: " + player.GetKeys());
 
-                UIManager.Instance.ShowKeyCheckText("Key Collected!");
+                UIManager.Instance.ShowKeyCheckText("Key Collected!"); // Show key collected message
 
-                gameObject.SetActive(false);
+                gameObject.SetActive(false); // Deactivate the key object
+                HidePickupText();
             }
         }
         else
         {
-            HideUIText();
+            HidePickupText();
         }
     }
 
-    private void ShowUIText(string message)
+    private void ShowPickupText(string message)
     {
-        if (uiText != null)
-        {
-            uiText.text = message;
-            uiText.gameObject.SetActive(true);
-        }
+        UIManager.Instance.ShowKeyPickupText(message); // Show the pickup text
     }
 
-    private void HideUIText()
+    private void HidePickupText()
     {
-        if (uiText != null)
-        {
-            uiText.gameObject.SetActive(false);
-        }
+        UIManager.Instance.HideKeyPickupText(); // Hide the pickup text
     }
 }
