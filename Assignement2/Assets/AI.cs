@@ -1,59 +1,63 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MoveTowardsPlayer : MonoBehaviour
 {
-    public float speed = 2.0f; // Speed at which the objects move towards the player
-    public float patrolSpeed = 1.0f; // Speed when patrolling
-    public float maxDistance = 10.0f; // Maximum distance at which the object will move towards the player
-    public float patrolRadius = 5.0f; // Radius within which the zombie will patrol
-    public AudioClip moveAudio; // Audio clip for moving
-    public AudioClip attackAudio; // Audio clip for attacking
-    public AudioClip deathAudio; // Audio clip for dying
-    public AudioClip hitAudio; // Audio clip for hit sound
-    public float health = 100.0f; // Zombie's health
-    public float damageAmount = 10.0f; // Amount of damage per bullet hit
-    [SerializeField] GameObject bloodPrefab; // Blood prefab
+    public float speed = 2.0f;
+    public float patrolSpeed = 1.0f;
+    public float maxDistance = 10.0f;
+    public float patrolRadius = 5.0f;
+    public AudioClip moveAudio;
+    public AudioClip attackAudio;
+    public AudioClip deathAudio;
+    public int maxHerdSize = 10; // Maximum number of zombies in a herd for flocking behavior
 
-    private Transform player;  // Reference to the player Transform
-    private Animator animator; // Reference to the Animator component
-    private AudioSource audioSource; // Reference to the AudioSource component
-    private Vector3 patrolTarget; // Target position for patrolling
-    private NavMeshAgent agent; // NavMeshAgent for pathfinding and movement
-    private float stoppingDistance = 1.0f; // Distance at which the object stops moving
-    private bool isDead = false; // Check if the zombie is dead
+    public AudioClip hitAudio;
+    public float health = 100.0f;
+    public float damageAmount = 10.0f;
+    public float flockingSpeed = 1.0f; // Speed during flocking
+
+    [SerializeField] GameObject bloodPrefab;
+
+    public float flockingRadius = 5.0f; // Radius for detecting nearby zombies for flocking
+    public float alignmentWeight = 1.0f;
+    public float cohesionWeight = 1.0f;
+    public float separationWeight = 1.5f;
+
+    private Transform player;
+    private Animator animator;
+    private AudioSource audioSource;
+    private Vector3 patrolTarget;
+    private NavMeshAgent agent;
+    private float stoppingDistance = 1.0f;
+    private bool isDead = false;
 
     void Start()
     {
-        // Find the player by tag
         GameObject playerObject = GameObject.FindWithTag("Player");
         if (playerObject != null)
         {
             player = playerObject.transform;
         }
 
-        // Get the Animator component attached to this object
         animator = GetComponent<Animator>();
-
-        // Get the AudioSource component attached to this object
-
-        // Get the NavMeshAgent component attached to this object
+        audioSource = GetComponent<AudioSource>();
         agent = GetComponent<NavMeshAgent>();
+
         if (agent != null)
         {
-            agent.speed = speed; // Set movement speed for the NavMeshAgent
-            agent.stoppingDistance = stoppingDistance; // Set the stopping distance
+            agent.speed = speed;
+            agent.stoppingDistance = stoppingDistance;
         }
 
-        // If there is an animator, set it to idle by default
         if (animator != null)
         {
-            animator.SetBool("isMoving", false); // Default to idle animation
-            animator.SetBool("isPatrolling", true); // Start with patrolling animation
+            animator.SetBool("isMoving", false);
+            animator.SetBool("isPatrolling", true);
         }
 
-        // Set initial patrol target
         SetNewPatrolTarget();
     }
 
@@ -62,36 +66,80 @@ public class MoveTowardsPlayer : MonoBehaviour
         if (player != null && !isDead)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-            // Determine the state of the zombie
-            bool isMoving = distanceToPlayer > stoppingDistance && distanceToPlayer <= maxDistance;
             bool isAttacking = distanceToPlayer <= stoppingDistance;
+            bool isMoving = distanceToPlayer > stoppingDistance && distanceToPlayer <= maxDistance;
             bool isPatrolling = !isMoving && !isAttacking;
 
-            switch (true)
+            if (isAttacking)
             {
-                case bool _ when isAttacking:
-                    AttackPlayer();
-                    break;
-
-                case bool _ when isMoving:
-                    MoveTowardsPlayerTarget();
-                    break;
-
-                case bool _ when isPatrolling:
-                    Patrol();
-                    break;
+                // Stop flocking and initiate attack
+                AttackPlayer();
+                agent.speed = speed; // Reset to normal speed when attacking
+            }
+            else if (isMoving)
+            {
+                // Move towards the player and stop flocking
+                MoveTowardsPlayerTarget();
+                agent.speed = speed; // Reset to normal speed when moving towards player
+            }
+            else if (isPatrolling)
+            {
+                // Apply patrol behavior if not close to the player
+                Patrol();
+                agent.speed = patrolSpeed; // Set patrol speed
             }
 
+            // Reset the attacking animation if the player is not in attack range
             if (!isAttacking)
             {
-                animator.SetBool("isAttacking", false); // Reset attack state after animation is finished
+                animator.SetBool("isAttacking", false);
+            }
+
+            // Only apply flocking when not close to the player and herd size <= maxHerdSize
+            if (!isAttacking && !isMoving)
+            {
+                ApplyFlocking();
+                agent.speed = flockingSpeed; // Set speed for flocking behavior
+            }
+        }
+    }
+
+    void ApplyFlocking()
+    {
+        Vector3 alignment = Vector3.zero;
+        Vector3 cohesion = Vector3.zero;
+        Vector3 separation = Vector3.zero;
+        int neighborCount = 0;
+
+        Collider[] neighbors = Physics.OverlapSphere(transform.position, flockingRadius);
+
+        foreach (Collider neighbor in neighbors)
+        {
+            MoveTowardsPlayer otherZombie = neighbor.GetComponent<MoveTowardsPlayer>();
+
+            if (otherZombie != null && otherZombie != this)
+            {
+                // Only count neighbors for flocking up to the maxHerdSize
+                if (neighborCount >= maxHerdSize)
+                    break;
+
+                Vector3 toNeighbor = neighbor.transform.position - transform.position;
+                alignment += otherZombie.agent.velocity;
+                cohesion += neighbor.transform.position;
+                separation += toNeighbor / toNeighbor.sqrMagnitude;
+                neighborCount++;
             }
         }
 
-        if (animator != null && animator.GetBool("isAttacking") && !animator.GetCurrentAnimatorStateInfo(0).IsName("AttackAnimationName"))
+        // Apply flocking only if the herd is within max size
+        if (neighborCount > 0 && neighborCount <= maxHerdSize)
         {
-            animator.SetBool("isAttacking", false); // Reset attack state after animation is finished
+            alignment = (alignment / neighborCount).normalized * alignmentWeight;
+            cohesion = ((cohesion / neighborCount) - transform.position).normalized * cohesionWeight;
+            separation = (separation / neighborCount).normalized * separationWeight;
+
+            Vector3 flockingDirection = alignment + cohesion + separation;
+            agent.velocity = Vector3.Lerp(agent.velocity, flockingDirection * flockingSpeed, Time.deltaTime); // Use flocking speed
         }
     }
 
@@ -99,115 +147,91 @@ public class MoveTowardsPlayer : MonoBehaviour
     {
         if (agent != null)
         {
-            agent.SetDestination(player.position); // Set the player as the destination
+            agent.SetDestination(player.position);
             PlayGrowlSound();
-
         }
 
-        // Trigger moving animation
         if (animator != null)
         {
             animator.SetBool("isMoving", true);
-            animator.SetBool("isPatrolling", false); // Stop patrolling animation
+            animator.SetBool("isPatrolling", false);
         }
     }
+
+
+
 
     void Patrol()
     {
         if (agent != null)
         {
-            agent.SetDestination(patrolTarget); // Set the patrol target as the destination
-
-            // Check if the zombie has reached the patrol target
-            if (Vector3.Distance(transform.position, patrolTarget) < 0.2f)
+            // If the agent is close to the current patrol target, set a new one
+            if (Vector3.Distance(transform.position, patrolTarget) < 0.5f)
             {
-                SetNewPatrolTarget(); // Set a new target if the current one is reached
+                SetNewPatrolTarget();
             }
+
+            agent.SetDestination(patrolTarget); // Move towards the patrol target
         }
 
-        // Trigger patrol animation
         if (animator != null)
         {
-            animator.SetBool("isMoving", false); // Stop moving animation
-            animator.SetBool("isPatrolling", true); // Start patrolling animation
+            animator.SetBool("isMoving", true); // Ensure moving animation is playing
+            animator.SetBool("isPatrolling", true);
         }
-
-        // Play patrol audio if not already playing
-
     }
-
 
     void SetNewPatrolTarget()
     {
-        // Set a new random patrol target within a defined radius
-        patrolTarget = new Vector3(
-            transform.position.x + Random.Range(-patrolRadius, patrolRadius),
-            transform.position.y,
-            transform.position.z + Random.Range(-patrolRadius, patrolRadius)
-        );
+        Vector3 randomDirection = Random.insideUnitSphere * patrolRadius; // Generate a random direction
+        randomDirection += transform.position; // Offset by current position
+        randomDirection.y = transform.position.y; // Keep the y-level consistent
+
+        // Check if the new patrol target is on the NavMesh to avoid unreachable positions
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(randomDirection, out hit, patrolRadius, NavMesh.AllAreas))
+        {
+            patrolTarget = hit.position; // Set a valid position as the new patrol target
+        }
     }
+
     void PlayGrowlSound()
     {
-        if (AudioManager.Instance == null)
-        {
-            Debug.LogError("AudioManager instance is null! Make sure the AudioManager is present in the scene.");
-        }
-        else if (AudioManager.Instance.attackAudio == null)
-        {
-            Debug.LogError("attackAudio is null! Please assign an audio clip in the AudioManager.");
-        }
-        else
+        if (AudioManager.Instance != null && AudioManager.Instance.attackAudio != null)
         {
             AudioManager.Instance.PlaySound(AudioManager.Instance.attackAudio);
         }
-
     }
+
     void AttackPlayer()
     {
-        // Logic to attack the player, e.g., dealing damage
         if (animator != null)
         {
             animator.SetBool("isAttacking", true);
         }
 
-        // Play attack audio
-        // PlayGrowlSound();
-
-        // Stop the NavMeshAgent from moving during attack
         if (agent != null)
         {
-            agent.ResetPath(); // Stop moving when attacking
+            agent.ResetPath(); // Stop moving while attacking
         }
     }
-
-    // Handle bullet collision
     private void OnTriggerEnter(Collider other)
     {
-        // Check if the object colliding is a bullet
         if (other.CompareTag("Bullet"))
         {
             TakeDamage(damageAmount);
-
-            // Play the hit audio
             PlayHitAudio();
-
-            // Play the blood effect at the zombie's position
             DamageEffects();
-
-            // Destroy the bullet after it hits
             Destroy(other.gameObject);
         }
     }
 
-    // Reduce health and handle death
     void TakeDamage(float amount)
     {
         health -= amount;
-
-        // If health is 0 or less, die
         if (health <= 0f)
         {
-            StartCoroutine(Die()); // Call coroutine to handle death animation and destruction
+            StartCoroutine(Die());
         }
     }
 
@@ -216,46 +240,38 @@ public class MoveTowardsPlayer : MonoBehaviour
         if (bloodPrefab != null)
         {
             GameObject bloodEffect = Instantiate(bloodPrefab, transform.position, Quaternion.identity);
-            Destroy(bloodEffect, 2f); // Destroy the blood effect after 2 seconds
+            Destroy(bloodEffect, 2f);
         }
     }
 
-    // Play hit audio
     void PlayHitAudio()
     {
         if (hitAudio != null && audioSource != null)
         {
-            audioSource.PlayOneShot(hitAudio); // Play the hit sound effect
+            audioSource.PlayOneShot(hitAudio);
         }
     }
 
-    // Handle zombie death
     IEnumerator Die()
     {
-        isDead = true; // Prevent further actions
-
+        isDead = true;
         if (animator != null)
         {
-            animator.SetTrigger("Die"); // Trigger death animation
+            animator.SetTrigger("Die");
         }
 
-        // Play death audio
         if (audioSource != null)
         {
-            audioSource.clip = deathAudio; // Set the audio clip for dying
-            audioSource.Play(); // Play the death sound
+            audioSource.clip = deathAudio;
+            audioSource.Play();
         }
 
-        // Stop the NavMeshAgent from moving
         if (agent != null)
         {
-            agent.enabled = false; // Disable the NavMeshAgent
+            agent.enabled = false;
         }
 
-        // Wait for the length of the death animation before destroying the object
         yield return new WaitForSeconds(3.0f);
-
-        // Destroy the zombie GameObject after the death animation has finished
         Destroy(gameObject);
     }
 }

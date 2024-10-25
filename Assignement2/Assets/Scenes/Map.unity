@@ -250,7 +250,7 @@ PrefabInstance:
       objectReference: {fileID: 1697892872}
     - target: {fileID: 1160647656577037116, guid: dda305864d2c3f743970508513c97e69, type: 3}
       propertyPath: numberOfObjects
-      value: 300
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 3853879934459672197, guid: dda305864d2c3f743970508513c97e69, type: 3}
       propertyPath: m_Name
@@ -3344,6 +3344,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!208 &2022168556
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2022168554}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &2041235099
 GameObject:
   m_ObjectHideFlags: 0
@@ -4231,6 +4247,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2901927269577243129, guid: 278ac15dd0b75c04ba06a4d533adf3df, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2022168555}
+    - targetCorrespondingSourceObject: {fileID: 2901927269577243129, guid: 278ac15dd0b75c04ba06a4d533adf3df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2022168556}
   m_SourcePrefab: {fileID: 100100000, guid: 278ac15dd0b75c04ba06a4d533adf3df, type: 3}
 --- !u!1001 &5824425592262858710
 PrefabInstance:

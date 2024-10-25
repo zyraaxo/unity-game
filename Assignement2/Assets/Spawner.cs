@@ -36,7 +36,13 @@ public class TerrainObjectSpawner : MonoBehaviour
                 Vector3 spawnPosition = new Vector3(randomX, y, randomZ);
 
                 // Instantiate the object at the spawn position
-                Instantiate(objectToSpawn, spawnPosition, Quaternion.identity);
+                GameObject spawnedObject = Instantiate(objectToSpawn, spawnPosition, Quaternion.identity);
+
+                // Scale every 100th zombie by a factor of 5
+                if ((spawnedObjects + 1) % 100 == 0)
+                {
+                    spawnedObject.transform.localScale = new Vector3(5f, 5f, 5f);
+                }
 
                 // Increment the counter for spawned objects
                 spawnedObjects++;

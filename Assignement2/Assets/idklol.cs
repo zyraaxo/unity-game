@@ -24,7 +24,7 @@ public class DistanceMarker : MonoBehaviour
             transform.position = targetPosition;
 
             // Control visibility based on distance (optional)
-            if (distance < 10f) // Adjust this value as needed
+            if (distance < 100f) // Adjust this value as needed
             {
                 distanceText.gameObject.SetActive(true);
             }
