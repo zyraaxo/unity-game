@@ -1,25 +1,74 @@
 using UnityEngine;
-using TMPro; // Make sure to import the TextMeshPro namespace
+using TMPro;
 using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager Instance; // Singleton instance
-    public TextMeshProUGUI healthRestoredText; // Reference to the TextMeshProUGUI object
-    public TextMeshProUGUI speedBoostText; // Reference to the TextMeshProUGUI object for speed boost
-    public TextMeshProUGUI keyCheckText; // Reference to the TextMeshProUGUI object for key check
-    public TextMeshProUGUI keyPickupText; // Reference to the TextMeshProUGUI object for key pickup
+    public static UIManager Instance;
+
+    public TextMeshProUGUI initialMessageText; // Initial welcome message text
+    public TextMeshProUGUI healthRestoredText; // Text for health restored message
+    public TextMeshProUGUI speedBoostText; // Text for speed boost message
+    public TextMeshProUGUI keyCheckText; // Text for key check message
+    public TextMeshProUGUI keyPickupText; // Text for key pickup message
+    public TextMeshProUGUI keyCountText; // New text to display the key count
 
     void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Optional: persist through scene loads
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); // Prevent duplicate instances
+            Destroy(gameObject);
+        }
+    }
+
+    void Start()
+    {
+        DisplayInitialUI();
+    }
+
+    void Update()
+    {
+        UpdateKeyCountText(); // Update the key count each frame
+    }
+
+    private void DisplayInitialUI()
+    {
+        if (initialMessageText != null)
+        {
+            initialMessageText.text = "Welcome, there has been a zombie outbreak that needs containing. Find the 3 keys throughout the land then activate the portal to eliminate the hive.";
+            initialMessageText.gameObject.SetActive(true);
+            StartCoroutine(HideInitialUITextAfterDelay(5f)); // Hide after 5 seconds
+        }
+        else
+        {
+            Debug.LogError("initialMessageText is not assigned in the Inspector!");
+        }
+    }
+
+    private IEnumerator HideInitialUITextAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (initialMessageText != null)
+        {
+            initialMessageText.gameObject.SetActive(false);
+        }
+    }
+
+    // Update the key count display
+    private void UpdateKeyCountText()
+    {
+        if (keyCountText != null && Player.Instance != null)
+        {
+            keyCountText.text = "Keys: " + Player.Instance.GetKeys() + " / 3"; // Display the current key count
+        }
+        else if (keyCountText == null)
+        {
+            Debug.LogError("keyCountText is not assigned in the Inspector!");
         }
     }
 
@@ -28,8 +77,8 @@ public class UIManager : MonoBehaviour
     {
         if (keyPickupText != null)
         {
-            keyPickupText.text = message; // Set the text to the provided message
-            keyPickupText.gameObject.SetActive(true); // Show the text
+            keyPickupText.text = message;
+            keyPickupText.gameObject.SetActive(true);
         }
         else
         {
@@ -37,12 +86,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Method to hide the key pickup message
     public void HideKeyPickupText()
     {
         if (keyPickupText != null)
         {
-            keyPickupText.gameObject.SetActive(false); // Deactivate the TextMeshPro object
+            keyPickupText.gameObject.SetActive(false);
         }
     }
 
@@ -55,10 +103,9 @@ public class UIManager : MonoBehaviour
     {
         if (healthRestoredText != null)
         {
-            duration = 15.0f;
-            healthRestoredText.gameObject.SetActive(true); // Activate the TextMeshPro object
-            yield return new WaitForSeconds(duration);     // Wait for the specified duration
-            healthRestoredText.gameObject.SetActive(false); // Deactivate the TextMeshPro object
+            healthRestoredText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(duration);
+            healthRestoredText.gameObject.SetActive(false);
         }
         else
         {
@@ -66,7 +113,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Method to show speed boost text with countdown
     public void ShowSpeedBoostText(float duration)
     {
         StartCoroutine(ShowSpeedBoostTextRoutine(duration));
@@ -76,18 +122,17 @@ public class UIManager : MonoBehaviour
     {
         if (speedBoostText != null)
         {
-            speedBoostText.gameObject.SetActive(true); // Activate the TextMeshPro object
+            speedBoostText.gameObject.SetActive(true);
 
-            float timeLeft = duration; // Initialize time left
+            float timeLeft = duration;
             while (timeLeft > 0)
             {
-                // Update the text to show the remaining time
                 speedBoostText.text = "Speed Boost Active! Time Left: " + Mathf.Ceil(timeLeft) + "s";
-                yield return new WaitForSeconds(1f); // Wait for 1 second
-                timeLeft -= 1f; // Decrease time left
+                yield return new WaitForSeconds(1f);
+                timeLeft -= 1f;
             }
 
-            speedBoostText.gameObject.SetActive(false); // Deactivate the TextMeshPro object after the countdown
+            speedBoostText.gameObject.SetActive(false);
         }
         else
         {
@@ -95,16 +140,13 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Method to show key check message
     public void ShowKeyCheckText(int missingKeys)
     {
         if (keyCheckText != null)
         {
-            keyCheckText.text = "You need " + missingKeys + " more key" + (missingKeys > 1 ? "s" : "") + " to activate portal!";
-            keyCheckText.gameObject.SetActive(true); // Activate the TextMeshPro object
-
-            // Optionally, you can hide this message after a certain duration
-            StartCoroutine(HideKeyCheckTextAfterDelay(5f)); // Hide after 5 seconds
+            keyCheckText.text = "You need " + missingKeys + " more key" + (missingKeys > 1 ? "s" : "") + " to activate the portal!";
+            keyCheckText.gameObject.SetActive(true);
+            StartCoroutine(HideKeyCheckTextAfterDelay(5f));
         }
         else
         {
@@ -115,16 +157,16 @@ public class UIManager : MonoBehaviour
     private IEnumerator HideKeyCheckTextAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        keyCheckText.gameObject.SetActive(false); // Deactivate the TextMeshPro object
+        keyCheckText.gameObject.SetActive(false);
     }
 
     public void ShowKeyCheckText(string message)
     {
         if (keyCheckText != null)
         {
-            keyCheckText.text = message; // Set the text to the provided message
-            keyCheckText.gameObject.SetActive(true); // Show the text
-            StartCoroutine(HideKeyCheckTextRoutine()); // Optionally hide it after some time
+            keyCheckText.text = message;
+            keyCheckText.gameObject.SetActive(true);
+            StartCoroutine(HideKeyCheckTextRoutine());
         }
         else
         {
@@ -134,7 +176,7 @@ public class UIManager : MonoBehaviour
 
     private IEnumerator HideKeyCheckTextRoutine()
     {
-        yield return new WaitForSeconds(3f); // Adjust duration as needed
-        keyCheckText.gameObject.SetActive(false); // Hide the text
+        yield return new WaitForSeconds(3f);
+        keyCheckText.gameObject.SetActive(false);
     }
 }

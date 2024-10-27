@@ -1,5 +1,5 @@
 using UnityEngine;
-using TMPro; // Ensure you have this namespace imported
+using TMPro;
 
 public class DistanceMarker : MonoBehaviour
 {
@@ -8,6 +8,7 @@ public class DistanceMarker : MonoBehaviour
     public Transform player; // Reference to the player object
     public string markerText = "Distance to Target"; // Default marker text
     public float heightOffset = 2.0f; // Height offset above the target
+    public int requiredKeys = 3; // Number of keys needed to activate portal distance
 
     void Update()
     {
@@ -23,8 +24,13 @@ public class DistanceMarker : MonoBehaviour
             Vector3 targetPosition = target.position + new Vector3(0, heightOffset, 0);
             transform.position = targetPosition;
 
-            // Control visibility based on distance (optional)
-            if (distance < 100f) // Adjust this value as needed
+            // Control visibility based on player's key count and distance
+            if (Player.Instance.GetKeys() >= requiredKeys)
+            {
+                // Show the marker at any distance once required keys are collected
+                distanceText.gameObject.SetActive(true);
+            }
+            else if (distance < 100f) // Show the marker only within 100 units if required keys are not yet collected
             {
                 distanceText.gameObject.SetActive(true);
             }
