@@ -148,7 +148,7 @@ public class MoveTowardsPlayer : MonoBehaviour
         if (agent != null)
         {
             agent.SetDestination(player.position);
-            PlayGrowlSound();
+            // PlayGrowlSound();
         }
 
         if (animator != null)
@@ -220,7 +220,7 @@ public class MoveTowardsPlayer : MonoBehaviour
         if (other.CompareTag("Bullet"))
         {
             TakeDamage(damageAmount);
-            PlayHitAudio();
+            // PlayHitAudio();
             DamageEffects();
             Destroy(other.gameObject);
         }

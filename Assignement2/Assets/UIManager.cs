@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI keyCountText; // Display for the key count
     public TextMeshProUGUI ammoCountText; // New text for displaying ammo count
     public TextMeshProUGUI lowAmmoWarningText;
+    [SerializeField] private Text[] ammoCountTexts; // Assign different Text components in the inspector
+
 
     void Awake()
     {
@@ -96,6 +99,7 @@ public class UIManager : MonoBehaviour
             Debug.LogError("ammoCountText is not assigned in the Inspector!");
         }
     }
+
 
     // Method to show key pickup message
     public void ShowKeyPickupText(string message)

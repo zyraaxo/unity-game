@@ -1,38 +1,37 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public class Shooting : MonoBehaviour
 {
-    [SerializeField] private GunData gunData; // Assign the GunData scriptable object
-    [SerializeField] private Transform bulletSpawnPoint;
-    private AudioSource audioSource;
-    private float nextFireTime = 0f; // Track the next time we can fire
-
+    [SerializeField] private GunData gunData; // Reference to the GunData ScriptableObject
+    [SerializeField] private Transform bulletSpawnPoint; // Bullet spawn point
     private int currentBullets;
-    private bool isReloading = false;
+    private bool isReloading = false; // Prevents shooting while reloading
+    private float nextFireTime = 0f; // Track the next time we can fire
 
     void Start()
     {
-        audioSource = gameObject.AddComponent<AudioSource>();
         currentBullets = gunData.magazineSize; // Initialize with full magazine
         UIManager.Instance.UpdateAmmoCountText(currentBullets, gunData.magazineSize); // Initial update for ammo UI
     }
 
     void Update()
     {
+        // Check if the player is pressing the fire button (mouse button 0) and if enough time has passed
         if (Input.GetMouseButton(0) && Time.time >= nextFireTime && currentBullets > 0 && !isReloading)
         {
             nextFireTime = Time.time + gunData.fireRate; // Set the next fire time
             Shoot();
         }
 
+        // Check for reload input (R key) and if not already reloading
         if (Input.GetKeyDown(KeyCode.R) && !isReloading)
         {
             StartCoroutine(Reload());
         }
     }
 
-    void Shoot()
+    public void Shoot()
     {
         if (currentBullets <= 0)
         {
@@ -40,27 +39,24 @@ public class Shooting : MonoBehaviour
             return;
         }
 
+        // Spawn bullet
         Instantiate(gunData.bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
 
-        // Instantiate the muzzle flash as a Particle System
-        ParticleSystem muzzleFlashInstance = Instantiate(gunData.muzzleFlash, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-        muzzleFlashInstance.Play(); // Play the muzzle flash effect
-        Destroy(muzzleFlashInstance.gameObject, muzzleFlashInstance.main.duration); // Destroy it after its duration
+        // Play muzzle flash
+        ParticleSystem muzzleFlash = Instantiate(gunData.muzzleFlash, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+        muzzleFlash.Play();
+        Destroy(muzzleFlash.gameObject, muzzleFlash.main.duration);
 
-        PlayGunSound();
+        // Play the specific gun sound
+        AudioManager.Instance.PlayGunSound(gunData.gunSoundIndex); // Ensure gunSoundIndex is set for the current gun
 
         currentBullets--;
-
-        UIManager.Instance.UpdateAmmoCountText(currentBullets, gunData.magazineSize);
+        UIManager.Instance.UpdateAmmoCountText(currentBullets, gunData.magazineSize); // Initial update for ammo UI
     }
 
-    void PlayGunSound()
-    {
-        if (gunData.gunSound != null)
-        {
-            audioSource.PlayOneShot(gunData.gunSound);
-        }
-    }
+
+
+
 
     IEnumerator Reload()
     {
@@ -68,20 +64,25 @@ public class Shooting : MonoBehaviour
         Debug.Log("Reloading...");
         PlayReloadSound();
 
-        yield return new WaitForSeconds(gunData.reloadTime);
+        yield return new WaitForSeconds(gunData.reloadTime); // Wait for reload time
 
-        currentBullets = gunData.magazineSize;
+        currentBullets = gunData.magazineSize; // Refill magazine
         isReloading = false;
         Debug.Log("Reloaded!");
 
-        UIManager.Instance.UpdateAmmoCountText(currentBullets, gunData.magazineSize);
+        // Update the ammo UI after reloading
+        UIManager.Instance.UpdateAmmoCountText(currentBullets, gunData.magazineSize); // Initial update for ammo UI
     }
 
     void PlayReloadSound()
     {
-        if (AudioManager.Instance == null || AudioManager.Instance.reloadSound == null)
+        if (AudioManager.Instance == null)
         {
-            Debug.LogError("Missing AudioManager or reload sound!");
+            Debug.LogError("AudioManager instance is null! Make sure the AudioManager is present in the scene.");
+        }
+        else if (AudioManager.Instance.reloadSound == null)
+        {
+            Debug.LogError("reloadSound is null! Please assign an audio clip in the AudioManager.");
         }
         else
         {
