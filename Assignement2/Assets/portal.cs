@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement; // Add this for scene management
 
 public class Portal : MonoBehaviour
 {
@@ -6,6 +8,7 @@ public class Portal : MonoBehaviour
     private Renderer portalRenderer; // Renderer component of the portal
     private bool canActivatePortal = false; // Flag to track if the player can activate the portal
     public float activationDistance = 5f; // Distance within which the portal can be activated
+    public string d; // Name of the scene to load
 
     void Start()
     {
@@ -32,6 +35,7 @@ public class Portal : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.E))
                     {
                         ChangePortalMaterial();
+                        StartCoroutine(ActivatePortal()); // Start the coroutine to wait and change scene
                     }
                 }
                 else
@@ -60,5 +64,14 @@ public class Portal : MonoBehaviour
         {
             Debug.LogError("Portal Renderer or newPortalMaterial not assigned!");
         }
+    }
+
+    private IEnumerator ActivatePortal()
+    {
+        // Wait for 3 seconds
+        yield return new WaitForSeconds(3f);
+
+        // Load the new scene
+        SceneManager.LoadScene(d);
     }
 }

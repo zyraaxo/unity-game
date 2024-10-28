@@ -27,6 +27,14 @@ public class PlayerMovementManager : MonoBehaviour
 
     // Added for toggling guns
     private bool isUsingRegularGun = true; // To track which gun is currently in use
+    public GunData currentGunData; // Store the current gun's GunData
+
+
+
+    public GunData GetCurrentGunData()
+    {
+        return currentGunData;
+    }
 
     void Start()
     {

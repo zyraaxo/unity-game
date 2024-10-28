@@ -33,6 +33,7 @@ public class Shooting : MonoBehaviour
         }
     }
 
+
     public void Shoot()
     {
         if (currentBullets <= 0)
