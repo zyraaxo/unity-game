@@ -1,9 +1,13 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GunData", menuName = "Weapon/Gun")]
+[CreateAssetMenu(fileName = "NewGunData", menuName = "Guns/GunData")]
 public class GunData : ScriptableObject
 {
     public string gunName;
-    public Sprite gunIcon; // Assign the gun icon in the inspector
-    public GameObject gunPrefab;
+    public GameObject bulletPrefab;
+    public ParticleSystem muzzleFlash; // Use ParticleSystem directly
+    public AudioClip gunSound;
+    public int magazineSize = 10;
+    public float fireRate = 0.2f;
+    public float reloadTime = 2f;
 }

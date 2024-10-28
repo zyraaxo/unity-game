@@ -1,53 +1,91 @@
 using UnityEngine;
+using System.Collections;
 
 public class Shooting : MonoBehaviour
 {
-    [SerializeField] GameObject bulletPrefab;
-    [SerializeField] Transform bulletSpawnPoint;
-    [SerializeField] GameObject muzzleFlashPrefab; // Muzzle flash prefab
-    [SerializeField] AudioClip gunSound; // Gun sound audio clip
-    private AudioSource audioSource; // Reference to the AudioSource
-    [SerializeField] private float fireRate = 0.2f; // Fire rate in seconds
+    [SerializeField] private GunData gunData; // Assign the GunData scriptable object
+    [SerializeField] private Transform bulletSpawnPoint;
+    private AudioSource audioSource;
     private float nextFireTime = 0f; // Track the next time we can fire
-#pragma warning disable CS0436 // Type conflicts with imported type
-    FirstPersonController check;
-#pragma warning restore CS0436 // Type conflicts with imported type
+
+    private int currentBullets;
+    private bool isReloading = false;
 
     void Start()
     {
-        // Get the AudioSource component attached to the GameObject
         audioSource = gameObject.AddComponent<AudioSource>();
+        currentBullets = gunData.magazineSize; // Initialize with full magazine
+        UIManager.Instance.UpdateAmmoCountText(currentBullets, gunData.magazineSize); // Initial update for ammo UI
     }
 
     void Update()
     {
-        // Check if the player is pressing the fire button (mouse button 0) and if enough time has passed
-        if (Input.GetMouseButton(0) && Time.time >= nextFireTime)
+        if (Input.GetMouseButton(0) && Time.time >= nextFireTime && currentBullets > 0 && !isReloading)
         {
-            nextFireTime = Time.time + fireRate; // Set the next fire time
-            Shoot(); // Call the shoot method
+            nextFireTime = Time.time + gunData.fireRate; // Set the next fire time
+            Shoot();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R) && !isReloading)
+        {
+            StartCoroutine(Reload());
         }
     }
 
     void Shoot()
     {
+        if (currentBullets <= 0)
+        {
+            Debug.Log("Out of ammo! Press 'R' to reload.");
+            return;
+        }
 
-        Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+        Instantiate(gunData.bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
 
-        // Instantiate the muzzle flash
-        GameObject muzzleFlash = Instantiate(muzzleFlashPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-        Destroy(muzzleFlash, 1f); // Destroy the muzzle flash after 1 second (adjust as needed)
+        // Instantiate the muzzle flash as a Particle System
+        ParticleSystem muzzleFlashInstance = Instantiate(gunData.muzzleFlash, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+        muzzleFlashInstance.Play(); // Play the muzzle flash effect
+        Destroy(muzzleFlashInstance.gameObject, muzzleFlashInstance.main.duration); // Destroy it after its duration
 
-
-        // Play the gun sound
         PlayGunSound();
+
+        currentBullets--;
+
+        UIManager.Instance.UpdateAmmoCountText(currentBullets, gunData.magazineSize);
     }
 
     void PlayGunSound()
     {
-        if (gunSound != null)
+        if (gunData.gunSound != null)
         {
-            audioSource.PlayOneShot(gunSound);
+            audioSource.PlayOneShot(gunData.gunSound);
+        }
+    }
+
+    IEnumerator Reload()
+    {
+        isReloading = true;
+        Debug.Log("Reloading...");
+        PlayReloadSound();
+
+        yield return new WaitForSeconds(gunData.reloadTime);
+
+        currentBullets = gunData.magazineSize;
+        isReloading = false;
+        Debug.Log("Reloaded!");
+
+        UIManager.Instance.UpdateAmmoCountText(currentBullets, gunData.magazineSize);
+    }
+
+    void PlayReloadSound()
+    {
+        if (AudioManager.Instance == null || AudioManager.Instance.reloadSound == null)
+        {
+            Debug.LogError("Missing AudioManager or reload sound!");
+        }
+        else
+        {
+            AudioManager.Instance.PlaySound(AudioManager.Instance.reloadSound);
         }
     }
 }

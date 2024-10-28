@@ -13,5 +13,9 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: 
   gunName: 
-  gunIcon: {fileID: 0}
-  gunPrefab: {fileID: 0}
+  bulletPrefab: {fileID: 0}
+  muzzleFlashPrefab: {fileID: 0}
+  gunSound: {fileID: 0}
+  magazineSize: 10
+  fireRate: 0.2
+  reloadTime: 2

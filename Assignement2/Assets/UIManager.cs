@@ -11,7 +11,9 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI speedBoostText; // Text for speed boost message
     public TextMeshProUGUI keyCheckText; // Text for key check message
     public TextMeshProUGUI keyPickupText; // Text for key pickup message
-    public TextMeshProUGUI keyCountText; // New text to display the key count
+    public TextMeshProUGUI keyCountText; // Display for the key count
+    public TextMeshProUGUI ammoCountText; // New text for displaying ammo count
+    public TextMeshProUGUI lowAmmoWarningText;
 
     void Awake()
     {
@@ -69,6 +71,29 @@ public class UIManager : MonoBehaviour
         else if (keyCountText == null)
         {
             Debug.LogError("keyCountText is not assigned in the Inspector!");
+        }
+    }
+
+    // Method to update the ammo count display
+    public void UpdateAmmoCountText(int currentAmmo, int maxAmmo)
+    {
+        if (ammoCountText != null)
+        {
+            ammoCountText.text = "Ammo: " + currentAmmo + " / " + maxAmmo;
+
+            if (currentAmmo <= 3 && lowAmmoWarningText != null)
+            {
+                lowAmmoWarningText.text = "Low Ammo! Press 'R' to reload";
+                lowAmmoWarningText.gameObject.SetActive(true);
+            }
+            else if (lowAmmoWarningText != null)
+            {
+                lowAmmoWarningText.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            Debug.LogError("ammoCountText is not assigned in the Inspector!");
         }
     }
 

@@ -10,6 +10,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip explosionSound; // Sound for explosions
     public AudioClip growlSound; // Sound for growls
     public AudioClip deathSound; // Sound for death
+    public AudioClip reloadSound; // Sound for death
+
     public AudioClip bossMusic; // Sound for boss music
     public AudioClip slamSound; // Sound for boss music
     public AudioClip zombieSound; // Sound for boss music
