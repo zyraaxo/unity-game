@@ -78,12 +78,13 @@ public class UIManager : MonoBehaviour
     }
 
     // Method to update the ammo count display
-    public void UpdateAmmoCountText(int currentAmmo, int maxAmmo)
+    public void UpdateAmmoCountText(int currentAmmo, int totalAmmo)
     {
         if (ammoCountText != null)
         {
-            ammoCountText.text = "Ammo: " + currentAmmo + " / " + maxAmmo;
+            ammoCountText.text = $"{currentAmmo} / {totalAmmo}"; // Display current ammo over total ammo
 
+            // Low ammo warning
             if (currentAmmo <= 3 && lowAmmoWarningText != null)
             {
                 lowAmmoWarningText.text = "Low Ammo! Press 'R' to reload";
@@ -99,6 +100,7 @@ public class UIManager : MonoBehaviour
             Debug.LogError("ammoCountText is not assigned in the Inspector!");
         }
     }
+
 
 
     // Method to show key pickup message

@@ -6,13 +6,15 @@ public class Shooting : MonoBehaviour
     [SerializeField] private GunData gunData; // Reference to the GunData ScriptableObject
     [SerializeField] private Transform bulletSpawnPoint; // Bullet spawn point
     private int currentBullets;
+    private int totalAmmo; // Tracks the total available ammo
     private bool isReloading = false; // Prevents shooting while reloading
     private float nextFireTime = 0f; // Track the next time we can fire
 
     void Start()
     {
         currentBullets = gunData.magazineSize; // Initialize with full magazine
-        UIManager.Instance.UpdateAmmoCountText(currentBullets, gunData.magazineSize); // Initial update for ammo UI
+        totalAmmo = gunData.maxAmmo; // Initialize total ammo from GunData
+        UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo); // Updated to reflect current and total ammo
     }
 
     void Update()
@@ -51,12 +53,8 @@ public class Shooting : MonoBehaviour
         AudioManager.Instance.PlayGunSound(gunData.gunSoundIndex); // Ensure gunSoundIndex is set for the current gun
 
         currentBullets--;
-        UIManager.Instance.UpdateAmmoCountText(currentBullets, gunData.magazineSize); // Initial update for ammo UI
+        UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo); // Updated to reflect current and total ammo
     }
-
-
-
-
 
     IEnumerator Reload()
     {
@@ -66,12 +64,20 @@ public class Shooting : MonoBehaviour
 
         yield return new WaitForSeconds(gunData.reloadTime); // Wait for reload time
 
-        currentBullets = gunData.magazineSize; // Refill magazine
+        // Check if there's ammo to reload
+        if (totalAmmo > 0)
+        {
+            // Calculate how many bullets can be reloaded
+            int bulletsToReload = Mathf.Min(gunData.magazineSize, totalAmmo);
+            currentBullets = bulletsToReload; // Refill magazine with available ammo
+            totalAmmo -= bulletsToReload; // Decrease total ammo
+        }
+
         isReloading = false;
         Debug.Log("Reloaded!");
 
         // Update the ammo UI after reloading
-        UIManager.Instance.UpdateAmmoCountText(currentBullets, gunData.magazineSize); // Initial update for ammo UI
+        UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo); // Updated to reflect current and total ammo
     }
 
     void PlayReloadSound()

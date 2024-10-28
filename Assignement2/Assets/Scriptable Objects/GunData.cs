@@ -13,5 +13,6 @@ public class GunData : ScriptableObject
     // Add an index for the gun sound
     public int gunSoundIndex; //
     public int gunIndex; // Unique index for the UI
+    public int maxAmmo = 30;
 
 }

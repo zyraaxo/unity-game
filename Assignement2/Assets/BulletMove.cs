@@ -19,9 +19,16 @@ public class BulletMove : MonoBehaviour
 
     void Update()
     {
+        // Rotate the bullet to align with its velocity direction
+        if (rb.velocity != Vector3.zero)
+        {
+            Quaternion rotation = Quaternion.LookRotation(rb.velocity);
+            transform.rotation = rotation;
+        }
+
         // Perform a raycast in the forward direction
         RaycastHit hit;
-        // The raycast length is set to 3.0f
+        // The raycast length is set to 30.0f
         if (Physics.Raycast(transform.position, transform.forward, out hit, 30.0f))
         {
             // Log the name of the object hit
@@ -31,6 +38,4 @@ public class BulletMove : MonoBehaviour
             Destroy(gameObject, 2);
         }
     }
-
-
 }
