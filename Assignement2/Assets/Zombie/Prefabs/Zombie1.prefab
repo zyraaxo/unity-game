@@ -1873,11 +1873,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 6
+  attackRange: 5
   patrolSpeed: 2
   maxDistance: 10
   patrolRadius: 15
   moveAudio: {fileID: 8300000, guid: 8b579bf432f9ec746b5157530a808ee1, type: 3}
   attackAudio: {fileID: 8300000, guid: ac49383c0bb7afe43bf5cd3eb573a2b8, type: 3}
+  deathAudio: {fileID: 0}
+  maxHerdSize: 10
+  hitAudio: {fileID: 0}
+  health: 250
+  damageAmount: 10
+  flockingSpeed: 1
+  bloodPrefab: {fileID: 0}
+  flockingRadius: 5
+  alignmentWeight: 1
+  cohesionWeight: 1
+  separationWeight: 1.5
 --- !u!1 &4710940672626480558
 GameObject:
   m_ObjectHideFlags: 0

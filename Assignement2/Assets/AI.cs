@@ -6,6 +6,8 @@ using System.Collections.Generic;
 public class MoveTowardsPlayer : MonoBehaviour
 {
     public float speed = 2.0f;
+    public float attackRange = 5f; // Range within which the boss can attack
+
     public float patrolSpeed = 1.0f;
     public float maxDistance = 10.0f;
     public float patrolRadius = 5.0f;
@@ -31,7 +33,7 @@ public class MoveTowardsPlayer : MonoBehaviour
     private AudioSource audioSource;
     private Vector3 patrolTarget;
     private NavMeshAgent agent;
-    private float stoppingDistance = 1.0f;
+    private float stoppingDistance = 2.0f;
     private bool isDead = false;
 
     void Start()
@@ -214,7 +216,38 @@ public class MoveTowardsPlayer : MonoBehaviour
         {
             agent.ResetPath(); // Stop moving while attacking
         }
+
+        // Rotate to face the player
+        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+        directionToPlayer.y = 0; // Keep rotation only on the Y-axis
+        Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5.0f); // Adjust the rotation speed as needed
+
+        Invoke("FinishAttack", 1.0f);
     }
+
+    void FinishAttack()
+    {
+        animator.SetBool("isAttacking", false); // Stop attack animation
+
+        // Reference to the player health script
+        PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>(); // Find the PlayerHealth component in the scene
+
+        // Check if the player is in range (implement your own logic for this)
+        if (playerHealth != null && IsPlayerInRange())
+        {
+            playerHealth.TakeDamage(10); // Damage amount can be adjusted as needed
+        }
+
+        // Start the coroutine to wait before moving again
+    }
+    private bool IsPlayerInRange()
+    {
+        // Check if the player is in range based on the defined attack range
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        return distanceToPlayer <= attackRange; // Return true if within range
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Bullet"))
