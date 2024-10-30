@@ -149,14 +149,11 @@ public class NPCMovement : MonoBehaviour
     private System.Collections.IEnumerator WaitBeforeMoving()
     {
         animator.SetBool("isIdle", true);
-
-        // Stand still for 7 seconds
-        yield return new WaitForSeconds(9f);
-
-        // After waiting, move towards the player
-        RunTowardsPlayer(); // Ensure boss continues moving towards the player
-
-        isAttacking = false; // Reset attacking state
+        animator.SetBool("isWalking", false); // Idle state
+        yield return new WaitForSeconds(7f);
+        RunTowardsPlayer();
+        isAttacking = false;
+        animator.SetBool("isWalking", true); // Resume walking after idle
     }
 
     private bool IsPlayerInRange()
@@ -174,27 +171,10 @@ public class NPCMovement : MonoBehaviour
 
 
 
-    // Coroutine to trigger random running behavior
-
-    void StartRunning()
-    {
-        isRunning = true;
-        navMeshAgent.speed = runSpeed; // Set speed to running speed
-        animator.SetBool("run", true); // Trigger the running animation
-        Debug.Log("NPC started running.");
-    }
-
-    void StopRunning()
-    {
-        isRunning = false;
-        navMeshAgent.speed = moveSpeed; // Reset speed to walking speed
-        animator.SetBool("run", false); // Stop the running animation
-        Debug.Log("NPC stopped running.");
-    }
 
 
 
-    // Play the walking sound when the NPC is moving
+
     void PlayWalkingSound()
     {
         if (!walkingSound.isPlaying)

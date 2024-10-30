@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement; // Add this to use SceneManager
 
 public class UIManager : MonoBehaviour
 {
@@ -16,7 +17,6 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI ammoCountText; // New text for displaying ammo count
     public TextMeshProUGUI lowAmmoWarningText;
     [SerializeField] private Text[] ammoCountTexts; // Assign different Text components in the inspector
-
 
     void Awake()
     {
@@ -34,11 +34,36 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         DisplayInitialUI();
+        CheckSceneAndDisableUI(); // Call to disable UI based on the scene
     }
 
     void Update()
     {
         UpdateKeyCountText(); // Update the key count each frame
+    }
+
+    private void CheckSceneAndDisableUI()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+
+        if (sceneName == "d")
+        {
+            // Example of disabling certain UI elements in "MenuScene"
+            initialMessageText.gameObject.SetActive(false);
+            healthRestoredText.gameObject.SetActive(true);
+            speedBoostText.gameObject.SetActive(true);
+            ammoCountText.gameObject.SetActive(true);
+            lowAmmoWarningText.gameObject.SetActive(true);
+            keyCountText.gameObject.SetActive(false);
+
+        }
+        else if (sceneName == "Map")
+        {
+            // Example: Enable necessary elements for the GameScene
+            initialMessageText.gameObject.SetActive(true);
+            keyCountText.gameObject.SetActive(true);
+        }
+        // Add more scene checks as needed
     }
 
     private void DisplayInitialUI()
@@ -64,7 +89,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Update the key count display
     private void UpdateKeyCountText()
     {
         if (keyCountText != null && Player.Instance != null)
@@ -77,7 +101,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Method to update the ammo count display
     public void UpdateAmmoCountText(int currentAmmo, int totalAmmo)
     {
         if (ammoCountText != null)
@@ -101,9 +124,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-
-
-    // Method to show key pickup message
     public void ShowKeyPickupText(string message)
     {
         if (keyPickupText != null)
@@ -209,5 +229,20 @@ public class UIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         keyCheckText.gameObject.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        CheckSceneAndDisableUI(); // Re-evaluate which UI elements to enable/disable
     }
 }
