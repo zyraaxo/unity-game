@@ -11,10 +11,10 @@ UI for ammo
 
 Add menu. volume, exit, how to play etc, turen off music etc
 
+- add visual cue when damage is taken.
+
 
 Add powerup text,
 - fix zombie audio
-- add player damage from zombies
 - fix scene builder from portal
 - add more powerups on spawner
-- fix zombie attack animation/ fix big zombies or dispose
