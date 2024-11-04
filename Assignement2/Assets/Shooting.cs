@@ -96,4 +96,16 @@ public class Shooting : MonoBehaviour
             AudioManager.Instance.PlaySound(AudioManager.Instance.reloadSound);
         }
     }
+    public void SetAmmo(int newTotalAmmo)
+    {
+        totalAmmo = newTotalAmmo; // Set the total ammo to the new value
+        currentBullets = Mathf.Min(gunData.magazineSize, totalAmmo); // Refill the magazine
+        UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo); // Update the ammo UI
+    }
+    public int GetMaxAmmo()
+    {
+        return gunData.maxAmmo; // Return the maximum ammo
+    }
+
+
 }
