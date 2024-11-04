@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6e1d27587a668a449f3bf47ae095c8c, type: 3}
+  m_Name: FAMAS
+  m_EditorClassIdentifier: 
+  gunName: 
+  bulletPrefab: {fileID: 7720780154531648699, guid: bbaaa11864f98ff40b7b54b9b713bf62, type: 3}
+  muzzleFlash: {fileID: 643835322603375765, guid: ad108cb82aaabf64bbb653b1f5fb5b8b, type: 3}
+  magazineSize: 25
+  fireRate: 0.2
+  reloadTime: 2
+  gunSoundIndex: 1
+  gunIndex: 1
+  maxAmmo: 150

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using System.Collections;
-
+using System.Collections.Generic; // Added to use List
 
 public class PlayerMovementManager : MonoBehaviour
 {
@@ -16,7 +16,6 @@ public class PlayerMovementManager : MonoBehaviour
     private GameObject previousGun; // Reference to the previously held gun
     public GameObject switchWeaponText;
 
-
     public PostProcessVolume postProcessVolume; // Reference to the Post Processing Volume
     private DepthOfField depthOfField; // Reference to the Depth of Field effect
 
@@ -29,7 +28,9 @@ public class PlayerMovementManager : MonoBehaviour
     private bool isUsingRegularGun = true; // To track which gun is currently in use
     public GunData currentGunData; // Store the current gun's GunData
 
-
+    // Added for multiple weapons management
+    public List<GameObject> availableGuns = new List<GameObject>(); // List of available guns
+    private int currentGunIndex = 0; // Index of the current gun
 
     public GunData GetCurrentGunData()
     {
@@ -63,6 +64,7 @@ public class PlayerMovementManager : MonoBehaviour
         // Initialize the current gun to the regular gun
         currentGun = regularGun;
         currentGun.SetActive(true); // Show the regular gun at the start
+        availableGuns.Add(currentGun); // Add the regular gun to the list
     }
 
     void Update()
@@ -200,76 +202,58 @@ public class PlayerMovementManager : MonoBehaviour
             }
         }
     }
+
     public void SetNewGun(GameObject newGun)
     {
         if (newGun != null)
         {
-            // If there is a current gun, deactivate it and store it as previous gun
+            // If there is a current gun, deactivate it
             if (currentGun != null)
             {
-                previousGun = currentGun; // Save the old gun
-                currentGun.SetActive(false); // Deactivate the current gun
+                currentGun.SetActive(false);
             }
 
             currentGun = newGun; // Set the new gun as the current gun
             currentGun.SetActive(true); // Activate the new gun
-            Debug.Log("Switched to new gun: " + newGun.name);
+            availableGuns.Add(newGun); // Add the new gun to the list
+            Debug.Log("Picked up and switched to new gun: " + newGun.name);
         }
     }
-
-    // Call this method to switch back to the previous gun
-    public void SwitchGuns()
-    {
-        StartCoroutine(SwitchGunsCoroutine());
-    }
-
-    private IEnumerator SwitchGunsCoroutine()
-    {
-        // Get the Animator component of the current gun
-        Animator currentGunAnimator = currentGun.GetComponent<Animator>();
-
-        // Trigger the gun switch animation
-        if (currentGunAnimator != null)
-        {
-            currentGunAnimator.SetBool("isSwitching", true);
-        }
-
-        // Wait for 2 seconds before switching
-        yield return new WaitForSeconds(1f);
-
-        // Swap the guns
-        previousGun.SetActive(true); // Activate previous gun
-        currentGun.SetActive(false); // Deactivate current gun
-
-        // Swap references
-        GameObject temp = currentGun;
-        currentGun = previousGun;
-        previousGun = temp;
-
-        Debug.Log("Switched back to previous gun: " + currentGun.name);
-
-        // Reset the animation trigger after the switch
-        if (currentGunAnimator != null)
-        {
-            currentGunAnimator.SetBool("isSwitching", false);
-        }
-    }
-
 
     public void PickUpGun(GameObject newGunPickup)
     {
-        if (currentGun != null)
+        if (newGunPickup != null)
         {
-            currentGun.SetActive(false); // Deactivate the current gun
+            // Add the new gun to the list of available guns
+            availableGuns.Add(newGunPickup);
+
+            // Set the new gun as the current gun and deactivate the previous one
+            if (currentGun != null)
+            {
+                currentGun.SetActive(false);
+            }
+
+            currentGun = newGunPickup;
+            currentGun.SetActive(true);
+            currentGun.transform.position = gunSpawnPoint.transform.position;
+            currentGun.transform.rotation = gunSpawnPoint.transform.rotation;
+
+            Debug.Log("Picked up new gun: " + newGunPickup.name);
         }
+    }
 
-        currentGun = newGunPickup; // Set the new gun pickup as the current gun
-        currentGun.SetActive(true); // Activate the new gun
+    public void SwitchGuns()
+    {
+        if (availableGuns.Count > 1)
+        {
+            currentGun.SetActive(false); // Deactivate current gun
 
-        // Set the position and rotation of the new gun to match the pickup's position and rotation
-        currentGun.transform.position = transform.position; // Assuming the PlayerMovementManager is on the player
-        currentGun.transform.rotation = transform.rotation; // Set rotation to match the player
+            // Cycle to the next gun in the list
+            currentGunIndex = (currentGunIndex + 1) % availableGuns.Count;
+            currentGun = availableGuns[currentGunIndex];
+            currentGun.SetActive(true); // Activate the new current gun
 
-        Debug.Log("Picked up a new gun: " + newGunPickup.name);
+            Debug.Log("Switched to gun: " + currentGun.name);
+        }
     }
 }
