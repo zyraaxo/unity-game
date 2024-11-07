@@ -15,11 +15,13 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(float damageAmount)
     {
-
-        Debug.Log("Called" + currentHealth);
+        Debug.Log("Called " + currentHealth);
         currentHealth -= damageAmount; // Reduce health
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); // Clamp health to valid range
         UpdateHealthBar();
+
+        // Play hit sound
+        AudioManager.Instance.PlaySound(AudioManager.Instance.hitSound); // Play hit sound
 
         // Optional: Check for death
         if (currentHealth <= 0)

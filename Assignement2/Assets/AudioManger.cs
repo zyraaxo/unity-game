@@ -16,6 +16,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip slamSound; // Sound for slam
     public AudioClip zombieSound; // Sound for zombie sounds
     public AudioClip attackAudio; // Sound for boss attack
+    public AudioClip hitSound; // Sound for boss attack
+
 
     // Additional audio clips for guns
     public AudioClip[] gunSounds; // Array to hold gun sounds
