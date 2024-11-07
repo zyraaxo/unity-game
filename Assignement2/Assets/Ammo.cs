@@ -8,12 +8,11 @@ public class Ammo : MonoBehaviour
 
     void Start()
     {
-        shootingScript = FindObjectOfType<Shooting>(); // Find the Shooting script in the scene
+        shootingScript = FindObjectOfType<Shooting>();
     }
 
     void Update()
     {
-        // Check if the player presses the 'E' key
         if (Input.GetKeyDown(KeyCode.E))
         {
             SetAmmoToMax();
@@ -24,7 +23,7 @@ public class Ammo : MonoBehaviour
     {
         if (shootingScript != null)
         {
-            shootingScript.SetAmmo(shootingScript.GetMaxAmmo()); // Call SetAmmo method to set ammo to max
+            shootingScript.SetAmmo(shootingScript.GetMaxAmmo());
         }
     }
 }
