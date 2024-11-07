@@ -5,6 +5,8 @@ using System.Collections;
 public class MoveTowardsPlayer : MonoBehaviour
 {
     public float speed = 2.0f;
+    public ParticleSystem deathParticles; // Reference to the death particle system
+
     public float attackRange = 5f;
     public float patrolSpeed = 1.0f;
     public float maxDistance = 10.0f;
@@ -260,22 +262,35 @@ public class MoveTowardsPlayer : MonoBehaviour
     IEnumerator Die()
     {
         isDead = true;
+
+        // Play death animation
         if (animator != null)
         {
             animator.SetTrigger("Die");
         }
 
+        // Play death sound
         if (audioSource != null)
         {
             audioSource.clip = deathAudio;
             audioSource.Play();
         }
 
+        // Play death particles if they are assigned
+        if (deathParticles != null)
+        {
+            ParticleSystem particles = Instantiate(deathParticles, transform.position, Quaternion.identity);
+            particles.Play();
+            Destroy(particles.gameObject, 2f); // Destroy particles after 2 seconds
+        }
+
+        // Disable AI movement
         if (agent != null)
         {
             agent.enabled = false;
         }
 
+        // Wait for the animation and particle effect to finish before destroying the zombie
         yield return new WaitForSeconds(3.0f);
         Destroy(gameObject);
     }

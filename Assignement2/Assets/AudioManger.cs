@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -17,7 +18,6 @@ public class AudioManager : MonoBehaviour
     public AudioClip zombieSound; // Sound for zombie sounds
     public AudioClip attackAudio; // Sound for boss attack
     public AudioClip hitSound; // Sound for boss attack
-
 
     // Additional audio clips for guns
     public AudioClip[] gunSounds; // Array to hold gun sounds
@@ -83,17 +83,26 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // Play boss music when the scene starts
+    // Play boss music only in the scene named "d"
     void Start()
     {
-        // Check if bossMusic is assigned and play it
-        if (bossMusic != null)
+        // Check the name of the current scene
+        if (SceneManager.GetActiveScene().name == "d")
         {
-            PlayMusic(bossMusic); // Play boss music on scene start
+            // Check if bossMusic is assigned and play it
+            if (bossMusic != null)
+            {
+                PlayMusic(bossMusic); // Play boss music in scene "d"
+            }
+            else
+            {
+                Debug.LogError("Boss music AudioClip is not assigned in the AudioManager!");
+            }
         }
         else
         {
-            Debug.LogError("Boss music AudioClip is not assigned in the AudioManager!");
+            // Optionally stop music in other scenes
+            StopMusic();
         }
     }
 }
