@@ -16,6 +16,14 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI keyCountText; // Display for the key count
     public TextMeshProUGUI ammoCountText; // New text for displaying ammo count
     public TextMeshProUGUI lowAmmoWarningText;
+    public TextMeshProUGUI currentWeapon;
+
+    public TextMeshProUGUI pickUpText;
+    public TextMeshProUGUI switchWeaponText;
+    public TextMeshProUGUI switchWeaponHintText; // New text for the "Press Tab to switch weapons" hint
+
+
+
     [SerializeField] private Text[] ammoCountTexts; // Assign different Text components in the inspector
 
     void Awake()
@@ -123,6 +131,13 @@ public class UIManager : MonoBehaviour
             Debug.LogError("ammoCountText is not assigned in the Inspector!");
         }
     }
+    public void UpdateWeaponText(string weaponName)
+    {
+        if (currentWeapon != null)
+        {
+            currentWeapon.text = "Current Weapon: " + weaponName;
+        }
+    }
 
     public void ShowKeyPickupText(string message)
     {
@@ -190,6 +205,31 @@ public class UIManager : MonoBehaviour
             Debug.LogError("speedBoostText is not assigned in the Inspector!");
         }
     }
+    public void DisplaySwitchWeaponText(string weaponName)
+    {
+        if (switchWeaponText != null)
+        {
+            switchWeaponText.text = "Switched to: " + weaponName; // Display the name of the new weapon
+            switchWeaponText.gameObject.SetActive(true);
+
+            // Hide the text after a delay
+            StartCoroutine(HideSwitchWeaponTextAfterDelay(2f)); // Adjust delay as needed
+        }
+        else
+        {
+            Debug.LogError("switchWeaponText is not assigned in the Inspector!");
+        }
+    }
+
+    private IEnumerator HideSwitchWeaponTextAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (switchWeaponText != null)
+        {
+            switchWeaponText.gameObject.SetActive(false);
+        }
+    }
+
 
     public void ShowKeyCheckText(int missingKeys)
     {
@@ -210,6 +250,35 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(delay);
         keyCheckText.gameObject.SetActive(false);
     }
+    public void UpdatePickupText(string message)
+    {
+        if (pickUpText != null)
+        {
+            pickUpText.text = message;
+        }
+        else
+        {
+            Debug.LogError("pickUpText is not assigned in the Inspector!");
+        }
+    }
+    public void DisplaySwitchWeaponHint(string hint)
+    {
+        if (switchWeaponHintText != null)
+        {
+            switchWeaponHintText.text = hint;
+            switchWeaponHintText.gameObject.SetActive(true);
+            StartCoroutine(HideTextAfterDelay(switchWeaponHintText, 5f)); // Hide after 5 seconds
+        }
+    }
+
+    private IEnumerator HideTextAfterDelay(TextMeshProUGUI text, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        text.gameObject.SetActive(false);
+    }
+
+
+
 
     public void ShowKeyCheckText(string message)
     {
@@ -245,4 +314,12 @@ public class UIManager : MonoBehaviour
     {
         CheckSceneAndDisableUI(); // Re-evaluate which UI elements to enable/disable
     }
+    public void TogglePickupText(bool show)
+    {
+        if (pickUpText != null)
+        {
+            pickUpText.gameObject.SetActive(show);
+        }
+    }
 }
+

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Shooting : MonoBehaviour
 {
-    [SerializeField] private GunData gunData; // Reference to the GunData ScriptableObject
+    [SerializeField] public GunData gunData; // Reference to the GunData ScriptableObject
     [SerializeField] private Transform bulletSpawnPoint; // Bullet spawn point
     private int currentBullets;
     private int totalAmmo; // Tracks the total available ammo
@@ -56,6 +56,15 @@ public class Shooting : MonoBehaviour
         currentBullets--;
         UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo); // Updated to reflect current and total ammo
     }
+    public void SetCurrentGun(GunData newGunData)
+    {
+        // Set the new gun data and reset ammo count
+        gunData = newGunData;
+        currentBullets = gunData.magazineSize; // Refill magazine size
+        totalAmmo = gunData.maxAmmo; // Refill total ammo
+        UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo); // Update UI
+    }
+
 
     IEnumerator Reload()
     {
