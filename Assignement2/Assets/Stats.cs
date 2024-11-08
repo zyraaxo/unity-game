@@ -1,39 +1,39 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public float maxHealth = 100f; // Maximum health of the player
-    public float currentHealth; // Current health of the player
-    public Slider healthBar; // Reference to the health bar slider
+    public float maxHealth = 100f;
+    public float currentHealth;
+    public Slider healthBar;
 
     void Start()
     {
-        currentHealth = maxHealth; // Set current health to max health
+        currentHealth = maxHealth;
         UpdateHealthBar();
     }
 
     public void TakeDamage(float damageAmount)
     {
         Debug.Log("Called " + currentHealth);
-        currentHealth -= damageAmount; // Reduce health
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); // Clamp health to valid range
+        currentHealth -= damageAmount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         UpdateHealthBar();
 
-        // Play hit sound
-        AudioManager.Instance.PlaySound(AudioManager.Instance.hitSound); // Play hit sound
+        AudioManager.Instance.PlaySound(AudioManager.Instance.hitSound);
 
-        // Optional: Check for death
         if (currentHealth <= 0)
         {
-            Die(); // Call a method to handle player death
+            Die();
         }
     }
 
     public void Heal(float healAmount)
     {
-        currentHealth += healAmount; // Increase health
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); // Clamp health to valid range
+        currentHealth += healAmount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         UpdateHealthBar();
     }
 
@@ -41,13 +41,37 @@ public class PlayerHealth : MonoBehaviour
     {
         if (healthBar != null)
         {
-            healthBar.value = currentHealth; // Set the slider value to current health
+            healthBar.value = currentHealth;
         }
     }
 
     void Die()
     {
-        // Handle player death (e.g., reload the scene, show a death screen, etc.)
+        if (UIManager.Instance != null && UIManager.Instance.deathText != null)
+        {
+            UIManager.Instance.deathText.text = "You Died! Press ESC to restart.";
+            UIManager.Instance.deathText.gameObject.SetActive(true);
+        }
+
         Debug.Log("Player has died!");
+        StartCoroutine(WaitForRestart());
+    }
+
+    IEnumerator WaitForRestart()
+    {
+        while (true)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                // Reset player's health back to maxHealth before restarting
+                currentHealth = maxHealth;
+                UpdateHealthBar();
+
+                // Reload the current scene
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                break;
+            }
+            yield return null;
+        }
     }
 }

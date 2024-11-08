@@ -80,6 +80,13 @@ public class NPCMovement : MonoBehaviour
         if (isDead)
             return; // Prevent movement or behavior if the NPC is dead
 
+        // Check if the player reference is null
+        if (player == null)
+        {
+            Debug.LogWarning("Player reference is null. Cannot calculate distance or move towards the player.");
+            return; // Exit early to avoid errors
+        }
+
         // Calculate the distance to the player
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
@@ -97,7 +104,7 @@ public class NPCMovement : MonoBehaviour
             // If not within attack range, move towards the player
             if (!isAttacking) // Only move if not attacking
             {
-                RunTowardsPlayer(); // Move towards the player
+                //RunTowardsPlayer(); // Move towards the player
             }
         }
 
@@ -107,9 +114,13 @@ public class NPCMovement : MonoBehaviour
             TakeDamage(damageAmount); // Deal damage when "C" is pressed
         }
 
-        // Check if the NPC is near the edge of the movement area
+        // Check for edge detection method
         CheckForEdge();
+
+        // Ensure that walking sound logic has valid references
         PlayWalkingSound();
+
+        // Ensure zombie spawning logic is valid
         SpawnZombies();
     }
 
@@ -151,7 +162,7 @@ public class NPCMovement : MonoBehaviour
         animator.SetBool("isIdle", true);
         animator.SetBool("isWalking", false); // Idle state
         yield return new WaitForSeconds(7f);
-        RunTowardsPlayer();
+        //RunTowardsPlayer();
         isAttacking = false;
         animator.SetBool("isWalking", true); // Resume walking after idle
     }
@@ -272,20 +283,10 @@ public class NPCMovement : MonoBehaviour
         }
         else
         {
-            RunTowardsPlayer(); // Make the boss run towards the player
+            //RunTowardsPlayer(); // Make the boss run towards the player
         }
     }
-    void RunTowardsPlayer()
-    {
-        if (player != null && !isAttacking) // Ensure the boss is not currently attacking
-        {
-            navMeshAgent.speed = runSpeed; // Set running speed
-            navMeshAgent.SetDestination(player.transform.position); // Set destination to player
-            animator.SetBool("run", true); // Trigger run animation
 
-            StartCoroutine(StopRunningAfterReachingPlayer()); // Stop running after reaching player
-        }
-    }
 
     IEnumerator StopRunningAfterReachingPlayer()
     {

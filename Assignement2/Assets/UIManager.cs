@@ -17,6 +17,11 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI ammoCountText; // New text for displaying ammo count
     public TextMeshProUGUI lowAmmoWarningText;
     public TextMeshProUGUI currentWeapon;
+    public TextMeshProUGUI esc;
+    public TextMeshProUGUI deathText;
+    public TextMeshProUGUI exfilText; // New text for exfil message
+
+
 
     public TextMeshProUGUI pickUpText;
     public TextMeshProUGUI switchWeaponText;
@@ -49,6 +54,30 @@ public class UIManager : MonoBehaviour
     {
         UpdateKeyCountText(); // Update the key count each frame
     }
+    public void ShowExfilMessage()
+    {
+        if (exfilText != null)
+        {
+            exfilText.text = "Data Upload complete. Head back to chopper for exfil";
+            exfilText.gameObject.SetActive(true); // Display the message
+
+            // Hide the message after 3 seconds
+            StartCoroutine(HideExfilMessageAfterDelay(3f));
+        }
+        else
+        {
+            Debug.LogError("exfilText is not assigned in the Inspector!");
+        }
+    }
+    private IEnumerator HideExfilMessageAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (exfilText != null)
+        {
+            exfilText.gameObject.SetActive(false); // Hide the message after the delay
+        }
+    }
+
 
     private void CheckSceneAndDisableUI()
     {
@@ -56,29 +85,29 @@ public class UIManager : MonoBehaviour
 
         if (sceneName == "d")
         {
-            // Example of disabling certain UI elements in "MenuScene"
-            initialMessageText.gameObject.SetActive(false);
-            healthRestoredText.gameObject.SetActive(true);
-            speedBoostText.gameObject.SetActive(true);
-            ammoCountText.gameObject.SetActive(true);
-            lowAmmoWarningText.gameObject.SetActive(true);
-            keyCountText.gameObject.SetActive(false);
+            // Check if UI elements are assigned before modifying them
+            if (initialMessageText != null) initialMessageText.gameObject.SetActive(false);
+            if (healthRestoredText != null) healthRestoredText.gameObject.SetActive(true);
+            if (pickUpText != null) pickUpText.gameObject.SetActive(true);
 
+            if (speedBoostText != null) speedBoostText.gameObject.SetActive(true);
+            if (ammoCountText != null) ammoCountText.gameObject.SetActive(true);
+            if (lowAmmoWarningText != null) lowAmmoWarningText.gameObject.SetActive(true);
+            if (keyCountText != null) keyCountText.gameObject.SetActive(false);
         }
         else if (sceneName == "Map")
         {
-            // Example: Enable necessary elements for the GameScene
-            initialMessageText.gameObject.SetActive(true);
-            keyCountText.gameObject.SetActive(true);
+            if (initialMessageText != null) initialMessageText.gameObject.SetActive(true);
+            if (keyCountText != null) keyCountText.gameObject.SetActive(true);
         }
-        // Add more scene checks as needed
     }
+
 
     private void DisplayInitialUI()
     {
         if (initialMessageText != null)
         {
-            initialMessageText.text = "Welcome, there has been a zombie outbreak that needs containing. Find the 3 keys throughout the land then activate the portal to eliminate the hive.";
+            initialMessageText.text = "Welcome, there has been a zombie outbreak that needs containing. Find the 3 Data devices throughout the land then update data at the console to send back to HQ.";
             initialMessageText.gameObject.SetActive(true);
             StartCoroutine(HideInitialUITextAfterDelay(5f)); // Hide after 5 seconds
         }

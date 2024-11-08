@@ -9,6 +9,8 @@ TagManager:
   - Bullet
   - Gun
   - GunPickup
+  - SF_Door
+  - Player1
   layers:
   - Default
   - TransparentFX

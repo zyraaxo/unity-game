@@ -22,6 +22,13 @@ public class MinimapFollow : MonoBehaviour
 
     void LateUpdate()
     {
+        // Check if the player reference is null
+        if (player == null)
+        {
+            Debug.LogWarning("Player reference is null. Cannot update the minimap camera position.");
+            return; // Exit early to avoid errors
+        }
+
         // Follow the player position while maintaining the current Y-axis position of the camera
         Vector3 newPosition = player.position;
         newPosition.y = transform.position.y; // Keep the minimap camera's Y position constant
@@ -33,6 +40,7 @@ public class MinimapFollow : MonoBehaviour
             ToggleMinimapView();
         }
     }
+
 
     void ToggleMinimapView()
     {

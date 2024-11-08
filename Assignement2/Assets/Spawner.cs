@@ -12,7 +12,7 @@ public class TerrainObjectSpawner : MonoBehaviour
         SpawnObjects();
     }
 
-    void SpawnObjects()
+    public void SpawnObjects()
     {
         Vector3 terrainSize = terrain.terrainData.size;
         int spawnedObjects = 0;

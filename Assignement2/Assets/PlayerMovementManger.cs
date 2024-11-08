@@ -69,30 +69,29 @@ public class PlayerMovementManager : MonoBehaviour
                 isWalking = false;
             }
 
-            if (isWalking && !walkingSound.isPlaying)
+            if (isWalking)
             {
-                walkingSound.Play();
+                if (walkingSound != null && !walkingSound.isPlaying)
+                {
+                    walkingSound.Play();
+                }
             }
-            else if (!isWalking && walkingSound.isPlaying)
+            else
             {
-                walkingSound.Stop();
+                if (walkingSound != null && walkingSound.isPlaying)
+                {
+                    walkingSound.Stop();
+                }
             }
 
             if (playerMovement.enableSprint && playerMovement.isSprinting)
             {
-                if (currentGun != null)
-                {
-                    currentGun.SetActive(false);
-                }
-
-                if (sprintingGun != null)
-                {
-                    sprintingGun.SetActive(false);
-                }
+                if (currentGun != null) currentGun.SetActive(false);
+                if (sprintingGun != null) sprintingGun.SetActive(false);
 
                 if (playerMovement.sprintRemaining <= 0)
                 {
-                    if (!hasPlayedStaminaSound)
+                    if (!hasPlayedStaminaSound && staminaDepletedSound != null)
                     {
                         staminaDepletedSound.Play();
                         hasPlayedStaminaSound = true;
@@ -117,56 +116,14 @@ public class PlayerMovementManager : MonoBehaviour
             }
             else
             {
-                if (currentGun != null)
-                {
-                    currentGun.SetActive(true);
-                }
-
-                if (sprintingGun != null)
-                {
-                    sprintingGun.SetActive(false);
-                }
+                if (currentGun != null) currentGun.SetActive(true);
+                if (sprintingGun != null) sprintingGun.SetActive(false);
 
                 hasPlayedStaminaSound = false;
             }
-
-            if (playerMovement.isSprintCooldown)
-            {
-                if (!hasPlayedCooldownSound)
-                {
-                    sprintCooldownSound.Play();
-                    hasPlayedCooldownSound = true;
-                }
-
-                if (depthOfField != null)
-                {
-                    depthOfField.active = true;
-                    depthOfField.focusDistance.value = 0.5f;
-                    depthOfField.aperture.value = 20f;
-                }
-            }
-            else
-            {
-                hasPlayedCooldownSound = false;
-
-                if (sprintCooldownSound.isPlaying)
-                {
-                    sprintCooldownSound.Stop();
-                }
-
-                if (depthOfField != null)
-                {
-                    depthOfField.active = false;
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                SwitchGuns();
-                switchWeaponText.SetActive(false);
-            }
         }
     }
+
 
     public void SetNewGun(GameObject newGun)
     {

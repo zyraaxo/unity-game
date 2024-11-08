@@ -9,10 +9,13 @@ public class FireballSpawner : MonoBehaviour
     public float bSpeed = 20f; // Speed of the fireball
     public AudioSource audioSource; // Audio source for firing sound
     public ParticleSystem muzzleFlash; // Optional: particle system for muzzle flash effect
-    public Transform player; // Reference to the player transform
+    private Transform player; // Reference to the player's transform
 
     void Start()
     {
+        // Find the player by tag
+        player = GameObject.FindWithTag("Player").transform;
+
         // Optional: Start shooting fireballs automatically (e.g., every 2 seconds)
         StartCoroutine(ShootFireballRoutine());
     }
@@ -28,19 +31,25 @@ public class FireballSpawner : MonoBehaviour
 
     void Shoot()
     {
+        if (player == null)
+        {
+            Debug.LogWarning("Player not found. Cannot shoot fireball.");
+            return; // Exit if the player is not found
+        }
+
         // Instantiate the fireball at the bullet point's position and rotation
         GameObject fireball = Instantiate(fireballPrefab, bulletPoint.position, bulletPoint.rotation);
 
         // Get the Rigidbody component of the fireball
         Rigidbody rb = fireball.GetComponent<Rigidbody>();
-        if (rb != null && player != null)
+        if (rb != null)
         {
             // Calculate direction towards the player
             Vector3 direction = (player.position - bulletPoint.position).normalized;
             rb.AddForce(direction * bSpeed, ForceMode.Impulse); // Shoot the fireball toward the player
         }
 
-        //Play audio and particle effects
+        // Play audio and particle effects
         if (audioSource != null)
         {
             audioSource.Play();
