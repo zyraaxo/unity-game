@@ -2,17 +2,16 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
-    [SerializeField] private int health = 100; // Health of the target
+    [SerializeField] private int health = 100;
 
     public void TakeDamage(int damage)
     {
-        health -= damage; // Subtract damage from health
+        health -= damage;
         Debug.Log(gameObject.name + " took " + damage + " damage. Remaining health: " + health);
 
-        // Check if health is less than or equal to zero
         if (health <= 0)
         {
-            Destroy(gameObject); // Destroy the target if health is depleted
+            Destroy(gameObject);
             Debug.Log(gameObject.name + " has been destroyed.");
         }
     }

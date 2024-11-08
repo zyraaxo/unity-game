@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+//This class handles player health/stats and the death of player using Gamemanager instance, handles heal up from heart powerup etc and take damage which is called by various AI
 public class PlayerHealth : MonoBehaviour
 {
     public float maxHealth = 100f;
@@ -47,6 +47,11 @@ public class PlayerHealth : MonoBehaviour
 
     void Die()
     {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.EndGame();
+        }
+
         if (UIManager.Instance != null && UIManager.Instance.deathText != null)
         {
             UIManager.Instance.deathText.text = "You Died! Press ESC to restart.";
@@ -54,20 +59,16 @@ public class PlayerHealth : MonoBehaviour
         }
 
         Debug.Log("Player has died!");
-        StartCoroutine(WaitForRestart());
     }
-
     IEnumerator WaitForRestart()
     {
         while (true)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                // Reset player's health back to maxHealth before restarting
                 currentHealth = maxHealth;
                 UpdateHealthBar();
 
-                // Reload the current scene
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 break;
             }

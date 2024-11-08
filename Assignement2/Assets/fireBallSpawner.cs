@@ -4,25 +4,22 @@ using UnityEngine;
 
 public class FireballSpawner : MonoBehaviour
 {
-    public GameObject fireballPrefab; // Prefab of the fireball to shoot
-    public Transform bulletPoint; // The point from which the fireball is shot
-    public float bSpeed = 20f; // Speed of the fireball
-    public AudioSource audioSource; // Audio source for firing sound
-    public ParticleSystem muzzleFlash; // Optional: particle system for muzzle flash effect
-    private Transform player; // Reference to the player's transform
+    public GameObject fireballPrefab;
+    public Transform bulletPoint;
+    public float bSpeed = 20f;
+    public AudioSource audioSource;
+    public ParticleSystem muzzleFlash;
+    private Transform player;
 
     void Start()
     {
-        // Find the player by tag
         player = GameObject.FindWithTag("Player").transform;
 
-        // Optional: Start shooting fireballs automatically (e.g., every 2 seconds)
         StartCoroutine(ShootFireballRoutine());
     }
 
     void Update()
     {
-        // Check for input to shoot (e.g., spacebar or any other condition)
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Shoot();
@@ -34,22 +31,18 @@ public class FireballSpawner : MonoBehaviour
         if (player == null)
         {
             Debug.LogWarning("Player not found. Cannot shoot fireball.");
-            return; // Exit if the player is not found
+            return;
         }
 
-        // Instantiate the fireball at the bullet point's position and rotation
         GameObject fireball = Instantiate(fireballPrefab, bulletPoint.position, bulletPoint.rotation);
 
-        // Get the Rigidbody component of the fireball
         Rigidbody rb = fireball.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            // Calculate direction towards the player
             Vector3 direction = (player.position - bulletPoint.position).normalized;
-            rb.AddForce(direction * bSpeed, ForceMode.Impulse); // Shoot the fireball toward the player
+            rb.AddForce(direction * bSpeed, ForceMode.Impulse);
         }
 
-        // Play audio and particle effects
         if (audioSource != null)
         {
             audioSource.Play();
@@ -63,7 +56,6 @@ public class FireballSpawner : MonoBehaviour
         Destroy(fireball, 10f);
     }
 
-    // Coroutine to shoot fireballs automatically at intervals
     private IEnumerator ShootFireballRoutine()
     {
         while (true)

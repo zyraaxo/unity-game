@@ -2,34 +2,38 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement; // Add this to use SceneManager
+using UnityEngine.SceneManagement;
+
+//this class handles all the UI elements in the game, makes it easy to manage as there are alot of different UI elements
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    public TextMeshProUGUI initialMessageText; // Initial welcome message text
-    public TextMeshProUGUI healthRestoredText; // Text for health restored message
-    public TextMeshProUGUI speedBoostText; // Text for speed boost message
-    public TextMeshProUGUI keyCheckText; // Text for key check message
-    public TextMeshProUGUI keyPickupText; // Text for key pickup message
-    public TextMeshProUGUI keyCountText; // Display for the key count
-    public TextMeshProUGUI ammoCountText; // New text for displaying ammo count
+    public TextMeshProUGUI initialMessageText;
+    public TextMeshProUGUI healthRestoredText;
+    public TextMeshProUGUI speedBoostText;
+    public TextMeshProUGUI keyCheckText;
+    public TextMeshProUGUI keyPickupText;
+    public TextMeshProUGUI keyCountText;
+    public TextMeshProUGUI ammoCountText;
     public TextMeshProUGUI lowAmmoWarningText;
     public TextMeshProUGUI currentWeapon;
+    public TextMeshProUGUI countdownTimerText;
+
+
     public TextMeshProUGUI esc;
     public TextMeshProUGUI deathText;
-    public TextMeshProUGUI exfilText; // New text for exfil message
-
+    public TextMeshProUGUI exfilText;
 
 
     public TextMeshProUGUI pickUpText;
     public TextMeshProUGUI switchWeaponText;
-    public TextMeshProUGUI switchWeaponHintText; // New text for the "Press Tab to switch weapons" hint
+    public TextMeshProUGUI switchWeaponHintText;
 
 
 
-    [SerializeField] private Text[] ammoCountTexts; // Assign different Text components in the inspector
+    [SerializeField] private Text[] ammoCountTexts;
 
     void Awake()
     {
@@ -47,21 +51,20 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         DisplayInitialUI();
-        CheckSceneAndDisableUI(); // Call to disable UI based on the scene
+        CheckSceneAndDisableUI();
     }
 
     void Update()
     {
-        UpdateKeyCountText(); // Update the key count each frame
+        UpdateKeyCountText();
     }
     public void ShowExfilMessage()
     {
         if (exfilText != null)
         {
             exfilText.text = "Data Upload complete. Head back to chopper for exfil";
-            exfilText.gameObject.SetActive(true); // Display the message
+            exfilText.gameObject.SetActive(true);
 
-            // Hide the message after 3 seconds
             StartCoroutine(HideExfilMessageAfterDelay(3f));
         }
         else
@@ -74,7 +77,7 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(delay);
         if (exfilText != null)
         {
-            exfilText.gameObject.SetActive(false); // Hide the message after the delay
+            exfilText.gameObject.SetActive(false);
         }
     }
 
@@ -85,10 +88,9 @@ public class UIManager : MonoBehaviour
 
         if (sceneName == "d")
         {
-            // Check if UI elements are assigned before modifying them
             if (initialMessageText != null) initialMessageText.gameObject.SetActive(false);
             if (healthRestoredText != null) healthRestoredText.gameObject.SetActive(true);
-            if (pickUpText != null) pickUpText.gameObject.SetActive(true);
+            if (pickUpText != null) pickUpText.gameObject.SetActive(false);
 
             if (speedBoostText != null) speedBoostText.gameObject.SetActive(true);
             if (ammoCountText != null) ammoCountText.gameObject.SetActive(true);
@@ -109,7 +111,7 @@ public class UIManager : MonoBehaviour
         {
             initialMessageText.text = "Welcome, there has been a zombie outbreak that needs containing. Find the 3 Data devices throughout the land then update data at the console to send back to HQ.";
             initialMessageText.gameObject.SetActive(true);
-            StartCoroutine(HideInitialUITextAfterDelay(5f)); // Hide after 5 seconds
+            StartCoroutine(HideInitialUITextAfterDelay(5f));
         }
         else
         {
@@ -142,9 +144,8 @@ public class UIManager : MonoBehaviour
     {
         if (ammoCountText != null)
         {
-            ammoCountText.text = $"{currentAmmo} / {totalAmmo}"; // Display current ammo over total ammo
+            ammoCountText.text = $"{currentAmmo} / {totalAmmo}";
 
-            // Low ammo warning
             if (currentAmmo <= 3 && lowAmmoWarningText != null)
             {
                 lowAmmoWarningText.text = "Low Ammo! Press 'R' to reload";
@@ -238,11 +239,10 @@ public class UIManager : MonoBehaviour
     {
         if (switchWeaponText != null)
         {
-            switchWeaponText.text = "Switched to: " + weaponName; // Display the name of the new weapon
+            switchWeaponText.text = "Switched to: " + weaponName;
             switchWeaponText.gameObject.SetActive(true);
 
-            // Hide the text after a delay
-            StartCoroutine(HideSwitchWeaponTextAfterDelay(2f)); // Adjust delay as needed
+            StartCoroutine(HideSwitchWeaponTextAfterDelay(2f));
         }
         else
         {
@@ -296,7 +296,7 @@ public class UIManager : MonoBehaviour
         {
             switchWeaponHintText.text = hint;
             switchWeaponHintText.gameObject.SetActive(true);
-            StartCoroutine(HideTextAfterDelay(switchWeaponHintText, 5f)); // Hide after 5 seconds
+            StartCoroutine(HideTextAfterDelay(switchWeaponHintText, 5f));
         }
     }
 
@@ -341,7 +341,7 @@ public class UIManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        CheckSceneAndDisableUI(); // Re-evaluate which UI elements to enable/disable
+        CheckSceneAndDisableUI();
     }
     public void TogglePickupText(bool show)
     {
@@ -350,5 +350,17 @@ public class UIManager : MonoBehaviour
             pickUpText.gameObject.SetActive(show);
         }
     }
+    public void ShowCountdownTimer(float remainingTime)
+    {
+        int minutes = Mathf.FloorToInt(remainingTime / 60f);
+        int seconds = Mathf.FloorToInt(remainingTime % 60f);
+        string timerText = string.Format("{0:0}:{1:00}", minutes, seconds);
+
+        if (countdownTimerText != null)
+        {
+            countdownTimerText.text = "Time Remaining: " + timerText;
+        }
+    }
+
 }
 

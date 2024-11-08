@@ -4,9 +4,8 @@ using UnityEngine.UI;
 
 public class FinalBoss : MonoBehaviour
 {
-    // Boss properties
     public float maxHealth = 500f;
-    private float currentHealth = 400f; // Set initial health to 400 for testing
+    private float currentHealth = 400f;
 
     public float meleeAttackDamage = 50f;
     public float mageAttackDamage = 40f;
@@ -17,21 +16,17 @@ public class FinalBoss : MonoBehaviour
     public float attackCooldown = 2f;
     private bool canAttack = true;
 
-    // Player reference
     public Transform player;
 
-    // For mage attacks
     public GameObject fireballPrefab;
     public Transform fireballSpawnPoint;
 
-    // Health Bar UI
-    public Slider healthBar; // Reference to the health bar slider UI element
-
+    public Slider healthBar;
     void Start()
     {
-        currentHealth = 100f; // Set current health to 400 out of 500
-        healthBar.maxValue = maxHealth; // Set the slider's max value to maxHealth
-        healthBar.value = currentHealth; // Set the slider to reflect the current health (400)
+        currentHealth = 100f;
+        healthBar.maxValue = maxHealth;
+        healthBar.value = currentHealth;
     }
 
     void Update()
@@ -51,7 +46,6 @@ public class FinalBoss : MonoBehaviour
         }
     }
 
-    // Melee attack coroutine
     IEnumerator MeleeAttack()
     {
         canAttack = false;
@@ -61,11 +55,10 @@ public class FinalBoss : MonoBehaviour
         canAttack = true;
     }
 
-    // Boss takes damage
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        healthBar.value = currentHealth; // Update the health bar slider value to reflect damage
+        healthBar.value = currentHealth;
 
         if (currentHealth <= 0)
         {

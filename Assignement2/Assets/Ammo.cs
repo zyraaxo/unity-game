@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//Class for ammo creates to reset ammo
 public class Ammo : MonoBehaviour
 {
     private Shooting shootingScript;

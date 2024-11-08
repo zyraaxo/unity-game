@@ -9,7 +9,6 @@ public class Portal : MonoBehaviour
     private bool canActivatePortal = false; // Flag to track if the player can activate the portal
     public float activationDistance = 5f; // Distance within which the portal can be activated
 
-    // UI elements for exfil message
     private bool gameEnded = false; // Flag to ensure the game ends only once
     private bool isUploading = false; // Flag to track upload state
     private bool isHoldingE = false; // Flag to track if the player is holding 'E'
@@ -79,9 +78,7 @@ public class Portal : MonoBehaviour
             yield break; // Exit the coroutine if the upload was cancelled
         }
 
-        UIManager.Instance.ShowKeyCheckText("Loading..."); // Show loading message during upload
-        yield return new WaitForSeconds(3f); // Simulate loading time for 3 seconds
-
+        // Skip the loading time and immediately show Exfil message
         UIManager.Instance.ShowExfilMessage(); // Show Exfil message
         gameEnded = true; // Ensure it only happens once
 
@@ -90,5 +87,34 @@ public class Portal : MonoBehaviour
         {
             terrainObjectSpawner.SpawnObjects(); // Call SpawnObjects method from TerrainObjectSpawner
         }
+
+        // Start the 3-minute countdown timer
+        StartCoroutine(StartCountdownTimer(180f)); // 3 minutes = 180 seconds
     }
+
+    private IEnumerator StartCountdownTimer(float countdownTime)
+    {
+        float remainingTime = countdownTime;
+        while (remainingTime > 0)
+        {
+            // Display the countdown on the UI
+            UIManager.Instance.ShowCountdownTimer(remainingTime);
+
+            // Log the countdown to the console
+            int minutes = Mathf.FloorToInt(remainingTime / 60f);
+            int seconds = Mathf.FloorToInt(remainingTime % 60f);
+            Debug.Log($"Time Remaining: {minutes:0}:{seconds:00}");
+
+            // Decrement the remaining time
+            remainingTime -= Time.deltaTime;
+            yield return null; // Wait for the next frame
+        }
+
+        // Timer has completed, take any necessary action here
+        UIManager.Instance.ShowKeyCheckText("Time's up!"); // Display a message when the timer ends
+
+        // Call EndGame method from GameManager after timer ends
+        GameManager.Instance.EndGame(); // End the game after the timer is up
+    }
+
 }

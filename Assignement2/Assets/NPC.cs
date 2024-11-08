@@ -104,7 +104,7 @@ public class NPCMovement : MonoBehaviour
             // If not within attack range, move towards the player
             if (!isAttacking) // Only move if not attacking
             {
-                //RunTowardsPlayer(); // Move towards the player
+                MoveTowardsPlayer(); // Call the new method to move towards the player
             }
         }
 
@@ -123,6 +123,7 @@ public class NPCMovement : MonoBehaviour
         // Ensure zombie spawning logic is valid
         SpawnZombies();
     }
+
 
     void Attack()
     {
@@ -375,5 +376,27 @@ public class NPCMovement : MonoBehaviour
     void CheckForEdge()
     {
         // Add logic here to check if the NPC is near the edge of the movement area and react accordingly
+    }
+    void MoveTowardsPlayer()
+    {
+        // Calculate the direction to the player
+        Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+
+        // Move the NPC towards the player using the NavMeshAgent
+        navMeshAgent.SetDestination(player.transform.position);
+
+        // Ensure the walking animation is played while the NPC is moving
+        if (navMeshAgent.velocity.magnitude > 0.1f) // Check if the NPC is moving
+        {
+            if (animator != null)
+            {
+                animator.SetBool("isWalking", true); // Set walking animation
+            }
+        }
+        else
+        {
+            // Stop walking animation when the NPC is idle
+
+        }
     }
 }

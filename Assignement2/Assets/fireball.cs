@@ -1,5 +1,5 @@
 using UnityEngine;
-
+//Used for fireball from boss fight scene
 public class Fireball : MonoBehaviour
 {
     public float speed = 10f;
@@ -63,7 +63,7 @@ public class Fireball : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void Explode()
+    private void Explode() //Blast radius damage from fireball impact
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, damageableLayers);
 
