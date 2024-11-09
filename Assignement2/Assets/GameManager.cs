@@ -22,10 +22,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        // Check if the player presses the "E" key
         if (Input.GetKeyDown(KeyCode.E) && !gameIsOver)
         {
-            EndGame(); // Call EndGame method when "E" is pressed
+            EndGame();
         }
     }
 
@@ -35,21 +34,20 @@ public class GameManager : MonoBehaviour
         {
             gameIsOver = true;
             Debug.Log("Game Over!");
-            UIManager.Instance.ShowKeyCheckText("Game Over"); // Assuming UIManager handles showing text
+            UIManager.Instance.ShowKeyCheckText("Game Over");
 
-            // Show Congrats message
             UIManager.Instance.ShowKeyCheckText("Congrats!");
 
-            Invoke("QuitGame", 3f); // Wait for 3 seconds before quitting the game
+            Invoke("QuitGame", 3f);
         }
     }
 
     public void QuitGame()
     {
 #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false; // Stop play mode in the Unity Editor
+        UnityEditor.EditorApplication.isPlaying = false;
 #else
-        Application.Quit(); // Quit the application in a build
+        Application.Quit(); 
 #endif
     }
 

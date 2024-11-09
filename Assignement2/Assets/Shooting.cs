@@ -1,38 +1,46 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement; // Import this to access scene management
 
 public class Shooting : MonoBehaviour
 {
-    [SerializeField] public GunData gunData; // Reference to the GunData ScriptableObject
-    [SerializeField] private Transform bulletSpawnPoint; // Bullet spawn point
+    [SerializeField] public GunData gunData;
+    [SerializeField] private Transform bulletSpawnPoint;
     private int currentBullets;
-    private int totalAmmo; // Tracks the total available ammo
-    private bool isReloading = false; // Prevents shooting while reloading
-    private float nextFireTime = 0f; // Track the next time we can fire
+    private int totalAmmo;
+    private bool isReloading = false;
+    private float nextFireTime = 0f;
 
     void Start()
     {
-        currentBullets = gunData.magazineSize; // Initialize with full magazine
-        totalAmmo = gunData.maxAmmo; // Initialize total ammo from GunData
-        UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo); // Updated to reflect current and total ammo
+        currentBullets = gunData.magazineSize;
+
+        // Check if the active scene is the one where you want unlimited ammo
+        if (SceneManager.GetActiveScene().name == "YourSceneName") // Replace "YourSceneName" with your specific scene name
+        {
+            totalAmmo = int.MaxValue; // Set totalAmmo to unlimited in the specified scene
+        }
+        else
+        {
+            totalAmmo = gunData.maxAmmo; // Use normal max ammo in other scenes
+        }
+
+        UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo);
     }
 
     void Update()
     {
-        // Check if the player is pressing the fire button (mouse button 0) and if enough time has passed
         if (Input.GetMouseButton(0) && Time.time >= nextFireTime && currentBullets > 0 && !isReloading)
         {
-            nextFireTime = Time.time + gunData.fireRate; // Set the next fire time
+            nextFireTime = Time.time + gunData.fireRate;
             Shoot();
         }
 
-        // Check for reload input (R key) and if not already reloading
         if (Input.GetKeyDown(KeyCode.R) && !isReloading)
         {
             StartCoroutine(Reload());
         }
     }
-
 
     public void Shoot()
     {
@@ -42,29 +50,35 @@ public class Shooting : MonoBehaviour
             return;
         }
 
-        // Spawn bullet
         Instantiate(gunData.bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
 
-        // Play muzzle flash
         ParticleSystem muzzleFlash = Instantiate(gunData.muzzleFlash, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
         muzzleFlash.Play();
         Destroy(muzzleFlash.gameObject, muzzleFlash.main.duration);
 
-        // Play the specific gun sound
-        AudioManager.Instance.PlayGunSound(gunData.gunSoundIndex); // Ensure gunSoundIndex is set for the current gun
+        AudioManager.Instance.PlayGunSound(gunData.gunSoundIndex);
 
         currentBullets--;
-        UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo); // Updated to reflect current and total ammo
-    }
-    public void SetCurrentGun(GunData newGunData)
-    {
-        // Set the new gun data and reset ammo count
-        gunData = newGunData;
-        currentBullets = gunData.magazineSize; // Refill magazine size
-        totalAmmo = gunData.maxAmmo; // Refill total ammo
-        UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo); // Update UI
+        UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo);
     }
 
+    public void SetCurrentGun(GunData newGunData)
+    {
+        gunData = newGunData;
+        currentBullets = gunData.magazineSize;
+
+        // Ensure the ammo logic is consistent when changing guns
+        if (SceneManager.GetActiveScene().name == "YourSceneName") // Replace with your scene name
+        {
+            totalAmmo = int.MaxValue;
+        }
+        else
+        {
+            totalAmmo = gunData.maxAmmo;
+        }
+
+        UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo);
+    }
 
     IEnumerator Reload()
     {
@@ -72,22 +86,15 @@ public class Shooting : MonoBehaviour
         Debug.Log("Reloading...");
         PlayReloadSound();
 
-        yield return new WaitForSeconds(gunData.reloadTime); // Wait for reload time
+        yield return new WaitForSeconds(gunData.reloadTime);
 
-        // Check if there's ammo to reload
-        if (totalAmmo > 0)
-        {
-            // Calculate how many bullets can be reloaded
-            int bulletsToReload = Mathf.Min(gunData.magazineSize, totalAmmo);
-            currentBullets = bulletsToReload; // Refill magazine with available ammo
-            totalAmmo -= bulletsToReload; // Decrease total ammo
-        }
+        int bulletsToReload = gunData.magazineSize;
+        currentBullets = bulletsToReload;
 
         isReloading = false;
         Debug.Log("Reloaded!");
 
-        // Update the ammo UI after reloading
-        UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo); // Updated to reflect current and total ammo
+        UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo);
     }
 
     void PlayReloadSound()
@@ -105,16 +112,24 @@ public class Shooting : MonoBehaviour
             AudioManager.Instance.PlaySound(AudioManager.Instance.reloadSound);
         }
     }
+
     public void SetAmmo(int newTotalAmmo)
     {
-        totalAmmo = newTotalAmmo; // Set the total ammo to the new value
-        currentBullets = Mathf.Min(gunData.magazineSize, totalAmmo); // Refill the magazine
-        UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo); // Update the ammo UI
+        if (SceneManager.GetActiveScene().name == "d") // Replace with your scene name
+        {
+            totalAmmo = int.MaxValue; // Keep ammo unlimited in the specified scene
+        }
+        else
+        {
+            totalAmmo = newTotalAmmo; // Use the provided ammo amount in other scenes
+        }
+
+        currentBullets = Mathf.Min(gunData.magazineSize, totalAmmo);
+        UIManager.Instance.UpdateAmmoCountText(currentBullets, totalAmmo);
     }
+
     public int GetMaxAmmo()
     {
-        return gunData.maxAmmo; // Return the maximum ammo
+        return gunData.maxAmmo;
     }
-
-
 }

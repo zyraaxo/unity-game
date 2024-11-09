@@ -1,178 +1,151 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.AI; // For NavMesh functionality
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class NPCMovement : MonoBehaviour
 {
-    public float moveSpeed = 3.5f; // Normal movement speed of the NPC
-    public float runSpeed = 100f; // Running speed of the NPC
-    public float changeDirectionInterval = 5f; // How often the NPC changes direction
-    public float movementRadius = 10f; // Radius within which the NPC will move
-    public float maxHealth = 500f; // Max health of the NPC
-    private float currentHealth; // Current health of the NPC
-    public GameObject zombieSpawner; // Reference to the ZombieSpawner GameObject
-    public GameObject player; // Reference to the player GameObject
-    private NavMeshAgent navMeshAgent; // NavMeshAgent reference
-    public float attackRange = 5f; // Range within which the boss can attack
-    private bool isAttacking = false; // To track if the boss is currently attacking
+    public float moveSpeed = 3.5f;
+    public float runSpeed = 100f;
+    public float changeDirectionInterval = 5f;
+    public float movementRadius = 10f;
+    public float maxHealth = 500f;
+    private float currentHealth;
+    public GameObject zombieSpawner;
+    public GameObject player;
+    private NavMeshAgent navMeshAgent;
+    public float attackRange = 2f;
+    private bool isAttacking = false;
 
-
-    public Animator animator; // Reference to the Animator component
-    public Image screenFlashImage; // Reference to the UI Image for screen flash
+    public Animator animator;
+    public Image screenFlashImage;
 
     private Vector3 targetPosition;
     private bool isIdle;
-    private bool isDead = false; // Tracks if the NPC is dead
-    public Slider healthBar; // Reference to the health bar slider UI element
+    private bool isDead = false;
+    public Slider healthBar;
 
-    // Walking sound variables
-    public AudioSource walkingSound; // Reference to the AudioSource for the walking sound
+    public AudioSource walkingSound;
     public AudioSource growlSound;
     public AudioSource deathSound;
     public AudioSource slam;
 
     public AudioSource warningSound;
 
-    // Random running variables
-    private bool isRunning = false; // Tracks if the NPC is currently running
-    public float minRunInterval = 10f; // Minimum time between runs
-    public float maxRunInterval = 20f; // Maximum time between runs
-    public float minRunDuration = 2f; // Minimum duration for running
-    public float maxRunDuration = 5f; // Maximum duration for running
+    private bool isRunning = false;
+    public float minRunInterval = 10f;
+    public float maxRunInterval = 20f;
+    public float minRunDuration = 2f;
+    public float maxRunDuration = 5f;
 
-    // Damage value for testing
-    public float damageAmount = 10f; // Amount of damage to deal when pressing "C"
+    public float damageAmount = 10f;
 
     void Start()
     {
-        animator.SetBool("isWalking", true); // Stop attack animation
+        animator.SetBool("isWalking", true);
 
-        // Initialize health
         currentHealth = maxHealth;
         healthBar.direction = Slider.Direction.RightToLeft;
 
         healthBar.maxValue = maxHealth;
         healthBar.value = currentHealth;
 
-        // Get the NavMeshAgent component
         navMeshAgent = GetComponent<NavMeshAgent>();
 
-        // Get the Animator component (assuming it's attached to the same GameObject)
         if (animator == null)
         {
             animator = GetComponent<Animator>();
         }
 
-        // Set the NPC's movement speed
         navMeshAgent.speed = moveSpeed;
 
-        // Set the initial random destination
 
 
-        // Start random running behavior
         // StartCoroutine(TriggerRandomRunning());
     }
 
     void Update()
     {
         if (isDead)
-            return; // Prevent movement or behavior if the NPC is dead
+            return;
 
-        // Check if the player reference is null
         if (player == null)
         {
             Debug.LogWarning("Player reference is null. Cannot calculate distance or move towards the player.");
-            return; // Exit early to avoid errors
+            return;
         }
 
-        // Calculate the distance to the player
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
-        // Check if the NPC is within attack range
         if (distanceToPlayer <= attackRange)
         {
-            // If within attack range, only attack
             if (!isAttacking)
             {
-                Attack(); // Start the attack
+                Attack();
             }
         }
         else
         {
-            // If not within attack range, move towards the player
-            if (!isAttacking) // Only move if not attacking
+            if (!isAttacking)
             {
-                MoveTowardsPlayer(); // Call the new method to move towards the player
+                MoveTowardsPlayer();
             }
         }
 
-        // Check for damage input
         if (Input.GetKeyDown(KeyCode.C))
         {
-            TakeDamage(damageAmount); // Deal damage when "C" is pressed
+            TakeDamage(damageAmount);
         }
 
-        // Check for edge detection method
-        CheckForEdge();
 
-        // Ensure that walking sound logic has valid references
         PlayWalkingSound();
 
-        // Ensure zombie spawning logic is valid
         SpawnZombies();
     }
 
 
     void Attack()
     {
-        // Check if already attacking
         if (!isAttacking)
         {
-            isAttacking = true; // Set attacking state
+            isAttacking = true;
 
-            // Play attack animation
-            animator.SetBool("isAttacking", true); // Trigger attack animation
+            animator.SetBool("isAttacking", true);
             PlayAttackSound();
 
-            // Start the attack animation duration timer
-            Invoke("FinishAttack", 1.0f); // Call FinishAttack after 1 second (or adjust as necessary)
+            Invoke("FinishAttack", 1.0f);
         }
     }
 
     void FinishAttack()
     {
-        animator.SetBool("isAttacking", false); // Stop attack animation
+        animator.SetBool("isAttacking", false);
 
-        // Reference to the player health script
-        PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>(); // Find the PlayerHealth component in the scene
+        PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>();
 
-        // Check if the player is in range (implement your own logic for this)
         if (playerHealth != null && IsPlayerInRange())
         {
-            playerHealth.TakeDamage(10); // Damage amount can be adjusted as needed
+            playerHealth.TakeDamage(10);
         }
 
-        // Start the coroutine to wait before moving again
         StartCoroutine(WaitBeforeMoving());
     }
 
     private System.Collections.IEnumerator WaitBeforeMoving()
     {
         animator.SetBool("isIdle", true);
-        animator.SetBool("isWalking", false); // Idle state
+        animator.SetBool("isWalking", false);
         yield return new WaitForSeconds(7f);
         //RunTowardsPlayer();
         isAttacking = false;
-        animator.SetBool("isWalking", true); // Resume walking after idle
+        animator.SetBool("isWalking", true);
     }
 
     private bool IsPlayerInRange()
     {
-        // Check if the player is in range based on the defined attack range
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-        return distanceToPlayer <= attackRange; // Return true if within range
+        return distanceToPlayer <= attackRange;
     }
 
 
@@ -242,7 +215,6 @@ public class NPCMovement : MonoBehaviour
         }
     }
 
-    // Stop the walking sound when the NPC is idle
     void StopWalkingSound()
     {
         if (walkingSound.isPlaying)
@@ -251,7 +223,6 @@ public class NPCMovement : MonoBehaviour
         }
     }
 
-    // Sets the idle state and updates the Animator
     void SetIdle(bool idle)
     {
         if (isDead)
@@ -260,7 +231,7 @@ public class NPCMovement : MonoBehaviour
         isIdle = idle;
         if (animator != null)
         {
-            animator.SetBool("isIdle", isIdle); // Update the "isIdle" parameter in the Animator
+            animator.SetBool("isIdle", isIdle);
         }
     }
 
@@ -268,12 +239,12 @@ public class NPCMovement : MonoBehaviour
     public void TakeDamage(float damage)
     {
         if (isDead)
-            return; // Can't take damage if dead
+            return;
 
-        currentHealth -= damage; // Reduce health
-        healthBar.value = currentHealth; // Update the health bar slider value to reflect damage
+        currentHealth -= damage;
+        healthBar.value = currentHealth;
 
-        animator.SetTrigger("getHit"); // Play the get hit animation
+        animator.SetTrigger("getHit");
         PlayGrowlSound();
         Debug.Log($"NPC took {damage} damage. Current health: {currentHealth}");
         SpawnZombies();
@@ -291,17 +262,15 @@ public class NPCMovement : MonoBehaviour
 
     IEnumerator StopRunningAfterReachingPlayer()
     {
-        // Wait until the boss reaches the player
         while (navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance)
         {
-            yield return null; // Continue until the boss is close enough
+            yield return null;
         }
 
-        // Optional: Add a small delay before stopping running
         yield return new WaitForSeconds(0.5f);
 
-        navMeshAgent.speed = moveSpeed; // Reset speed back to normal
-        animator.SetBool("run", false); // Stop the run animation
+        navMeshAgent.speed = moveSpeed;
+        animator.SetBool("run", false);
 
 
 
@@ -310,14 +279,13 @@ public class NPCMovement : MonoBehaviour
 
 
 
-    // Check if the collider is tagged as "Bullet"
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Bullet"))
         {
             float damageAmount = 20f;
             TakeDamage(damageAmount);
-            Destroy(other.gameObject); // Optionally destroy the bullet after it hits the NPC
+            Destroy(other.gameObject);
         }
     }
 
@@ -328,7 +296,7 @@ public class NPCMovement : MonoBehaviour
         StopWalkingSound();
         PlayDeathSound();
         navMeshAgent.isStopped = true;
-        Destroy(gameObject, 5f); // Destroys the object after 5 seconds
+        Destroy(gameObject, 5f);
     }
 
     void SpawnZombies()
@@ -373,30 +341,20 @@ public class NPCMovement : MonoBehaviour
         }
     }
 
-    void CheckForEdge()
-    {
-        // Add logic here to check if the NPC is near the edge of the movement area and react accordingly
-    }
+
     void MoveTowardsPlayer()
     {
-        // Calculate the direction to the player
         Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
 
-        // Move the NPC towards the player using the NavMeshAgent
         navMeshAgent.SetDestination(player.transform.position);
 
-        // Ensure the walking animation is played while the NPC is moving
-        if (navMeshAgent.velocity.magnitude > 0.1f) // Check if the NPC is moving
+        if (navMeshAgent.velocity.magnitude > 0.1f)
         {
             if (animator != null)
             {
-                animator.SetBool("isWalking", true); // Set walking animation
+                animator.SetBool("isWalking", true);
             }
         }
-        else
-        {
-            // Stop walking animation when the NPC is idle
 
-        }
     }
 }
