@@ -54,8 +54,12 @@ public class PlayerMovementManager : MonoBehaviour
         UpdateWeaponText();  // Update weapon text on start
     }
 
-    void Update()
-    {
+    void Update() {
+
+        if (Input.GetKeyDown(KeyCode.Tab)) {
+           // SwitchGuns();
+        }
+
         if (playerMovement != null && playerMovement.playerCanMove)
         {
             Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
