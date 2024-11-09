@@ -1542,11 +1542,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3775445703940974041, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
       propertyPath: maxHealth
-      value: 100
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 3775445703940974041, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
       propertyPath: currentHealth
-      value: 100
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 5539865656497942880, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1563,6 +1563,14 @@ PrefabInstance:
     - target: {fileID: 6635338115564971785, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8023494802608239416, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
+      propertyPath: m_Value
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8023494802608239416, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
+      propertyPath: m_MaxValue
+      value: 200
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
