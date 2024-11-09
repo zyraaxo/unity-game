@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement; // Add this to use SceneManager
+using UnityEngine.SceneManagement;
 
 public class Portal : MonoBehaviour
 {
@@ -15,6 +15,10 @@ public class Portal : MonoBehaviour
 
     // Reference to the TerrainObjectSpawner script
     public TerrainObjectSpawner terrainObjectSpawner;
+
+    // Reference to the Exfil spot GameObject (another object where player can end the game)
+    public GameObject exfilSpot;
+    private bool canExfil = false; // Flag to track if the player can now Exfil
 
     void Start()
     {
@@ -56,6 +60,12 @@ public class Portal : MonoBehaviour
             {
                 canActivatePortal = false; // Disable portal activation when the player moves away
             }
+
+            // After portal is activated, allow Exfil to be used
+            if (canExfil && Input.GetKeyDown(KeyCode.E) && exfilSpot != null)
+            {
+                EndGameViaExfil();
+            }
         }
     }
 
@@ -88,6 +98,10 @@ public class Portal : MonoBehaviour
             terrainObjectSpawner.SpawnObjects(); // Call SpawnObjects method from TerrainObjectSpawner
         }
 
+        // Enable Exfil functionality after portal activation
+        canExfil = true; // Now the Exfil spot is active
+        exfilSpot.SetActive(true); // Make the Exfil spot visible or active
+
         // Start the 3-minute countdown timer
         StartCoroutine(StartCountdownTimer(180f)); // 3 minutes = 180 seconds
     }
@@ -117,4 +131,10 @@ public class Portal : MonoBehaviour
         GameManager.Instance.EndGame(); // End the game after the timer is up
     }
 
+    // This method is triggered when the player presses E after the upload is complete (Exfil spot)
+    private void EndGameViaExfil()
+    {
+        UIManager.Instance.ShowKeyCheckText("Exfil Successful!"); // Show the Exfil message
+        GameManager.Instance.EndGame(); // End the game via the GameManager
+    }
 }

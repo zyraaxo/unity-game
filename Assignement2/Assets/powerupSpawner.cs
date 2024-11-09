@@ -15,7 +15,6 @@ public class PowerupSpawner : MonoBehaviour
 
     void Start()
     {
-        // Spawn the initial set of powerups
         SpawnPowerups(maxHealthPowerups, healthPowerupPrefab);
         SpawnPowerups(maxSpeedPowerups, speedPowerupPrefab);
 
@@ -46,11 +45,9 @@ public class PowerupSpawner : MonoBehaviour
         float terrainWidth = terrain.terrainData.size.x;
         float terrainLength = terrain.terrainData.size.z;
 
-        // Get random x, z positions
         float randomX = Random.Range(0, terrainWidth);
         float randomZ = Random.Range(0, terrainLength);
 
-        // Get the terrain height at the random position (y-axis)
         float yPos = terrain.SampleHeight(new Vector3(randomX, 0, randomZ));
 
         yPos += terrain.transform.position.y;
@@ -58,7 +55,6 @@ public class PowerupSpawner : MonoBehaviour
         return new Vector3(randomX, yPos + 1, randomZ);
     }
 
-    // Coroutine to spawn more powerups over time
     IEnumerator SpawnPowerupsOverTime()
     {
         while (true)
@@ -74,7 +70,7 @@ public class PowerupSpawner : MonoBehaviour
             }
             if (activeSpeedPowerups.Count < maxSpeedPowerups)
             {
-                SpawnPowerups(1, speedPowerupPrefab); // Spawn one speed powerup at a time
+                SpawnPowerups(1, speedPowerupPrefab);
             }
         }
     }

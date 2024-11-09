@@ -9993,6 +9993,10 @@ PrefabInstance:
       value: d
       objectReference: {fileID: 0}
     - target: {fileID: 1494045150664966387, guid: 278ac15dd0b75c04ba06a4d533adf3df, type: 3}
+      propertyPath: exfilSpot
+      value: 
+      objectReference: {fileID: 806329718}
+    - target: {fileID: 1494045150664966387, guid: 278ac15dd0b75c04ba06a4d533adf3df, type: 3}
       propertyPath: congratsUI
       value: 
       objectReference: {fileID: 296000597}
