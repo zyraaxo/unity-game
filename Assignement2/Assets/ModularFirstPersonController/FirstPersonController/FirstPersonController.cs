@@ -19,6 +19,7 @@ using System.Net;
 public class FirstPersonController : MonoBehaviour
 {
     private Rigidbody rb;
+    private PlayerMovementManager pmm;
 
     #region Camera Movement Variables
 
@@ -212,11 +213,14 @@ public class FirstPersonController : MonoBehaviour
 
     float camRotation;
 
-    private void Update()
-    {
+    private void Update() {
+
+        if (pmm != null && pmm.paused) {
+            return;
+        }
         #region Camera
 
-        // Control camera movement
+            // Control camera movement
         if (cameraCanMove)
         {
             yaw = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * mouseSensitivity;
@@ -376,8 +380,11 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
+
+        if (pmm != null && pmm.paused) {
+            return;
+        }
         #region Movement
 
         if (playerCanMove)

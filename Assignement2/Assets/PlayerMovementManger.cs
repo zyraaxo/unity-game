@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class PlayerMovementManager : MonoBehaviour
 {
@@ -24,6 +25,10 @@ public class PlayerMovementManager : MonoBehaviour
     public GunData currentGunData;
     public List<GameObject> availableGuns = new List<GameObject>();
     private int currentGunIndex = 0;
+
+
+    public bool paused;
+    [SerializeField] GameObject pauseMenu;
 
     public GunData GetCurrentGunData()
     {
@@ -54,10 +59,25 @@ public class PlayerMovementManager : MonoBehaviour
         UpdateWeaponText();  // Update weapon text on start
     }
 
+    public void togglePause() {
+        paused = !paused;
+        if (paused) {
+            playerMovement.cameraCanMove = false;
+            playerMovement.playerCanMove = false;
+            pauseMenu.SetActive(true);
+            Time.timeScale = 0;
+        } else {
+            playerMovement.cameraCanMove = true;
+            playerMovement.playerCanMove = true;
+            pauseMenu.SetActive(false);
+            Time.timeScale = 1;
+        }
+    }
+
     void Update() {
 
-        if (Input.GetKeyDown(KeyCode.Tab)) {
-           // SwitchGuns();
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            togglePause();
         }
 
         if (playerMovement != null && playerMovement.playerCanMove)
