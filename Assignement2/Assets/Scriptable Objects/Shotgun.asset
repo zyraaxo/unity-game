@@ -15,10 +15,10 @@ MonoBehaviour:
   gunName: 
   bulletPrefab: {fileID: 7720780154531648699, guid: bbaaa11864f98ff40b7b54b9b713bf62, type: 3}
   muzzleFlash: {fileID: 643835322603375765, guid: ad108cb82aaabf64bbb653b1f5fb5b8b, type: 3}
-  magazineSize: 20
+  magazineSize: 15
   fireRate: 1
   reloadTime: 2
   bulletSpread: 0.25
   gunSoundIndex: 1
   gunIndex: 1
-  maxAmmo: 20
+  maxAmmo: 30
