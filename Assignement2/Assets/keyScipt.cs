@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class KeyScript : MonoBehaviour
 {
-    public float activationDistance = 5f; // Distance within which the key can be activated
-    private Player player; // Reference to the Player instance
+    public float activationDistance = 5f;
+    private Player player;
 
     private void Start()
     {
         player = Player.Instance;
-        UIManager.Instance.HideKeyPickupText(); // Ensure the pickup text is hidden at start
+        UIManager.Instance.HideKeyPickupText();
     }
 
     private void Update()
@@ -24,9 +24,9 @@ public class KeyScript : MonoBehaviour
                 player.AddKey();
                 Debug.Log("Key collected! Total keys: " + player.GetKeys());
 
-                UIManager.Instance.ShowKeyCheckText("Key Collected!"); // Show key collected message
+                UIManager.Instance.ShowKeyCheckText("Key Collected!");
 
-                gameObject.SetActive(false); // Deactivate the key object
+                gameObject.SetActive(false);
                 HidePickupText();
             }
         }
@@ -38,11 +38,11 @@ public class KeyScript : MonoBehaviour
 
     private void ShowPickupText(string message)
     {
-        UIManager.Instance.ShowKeyPickupText(message); // Show the pickup text
+        UIManager.Instance.ShowKeyPickupText(message);
     }
 
     private void HidePickupText()
     {
-        UIManager.Instance.HideKeyPickupText(); // Hide the pickup text
+        UIManager.Instance.HideKeyPickupText();
     }
 }

@@ -3,6 +3,8 @@ using UnityEngine.Rendering.PostProcessing;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.SceneManagement;
+using UnityEditor;
 
 public class PlayerMovementManager : MonoBehaviour
 {
@@ -59,25 +61,59 @@ public class PlayerMovementManager : MonoBehaviour
         UpdateWeaponText();  // Update weapon text on start
     }
 
-    public void togglePause() {
+    public void togglePause()
+    {
         paused = !paused;
-        if (paused) {
+        if (paused)
+        {
             playerMovement.cameraCanMove = false;
             playerMovement.playerCanMove = false;
             pauseMenu.SetActive(true);
             Time.timeScale = 0;
-        } else {
+        }
+        else
+        {
             playerMovement.cameraCanMove = true;
             playerMovement.playerCanMove = true;
             pauseMenu.SetActive(false);
             Time.timeScale = 1;
         }
     }
+    private void LoadMainMenu()
+    {
+        DestroyPersistentObjects();
 
-    void Update() {
+#if UNITY_EDITOR
+        EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
 
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        // SceneManager.LoadScene(0);
+    }
+
+    private void DestroyPersistentObjects()
+    {
+        GameObject[] allObjects = GameObject.FindObjectsOfType<GameObject>();
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj && obj.scene.name == null)
+            {
+                Destroy(obj);
+            }
+        }
+    }
+
+    void Update()
+    {
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
             togglePause();
+        }
+        if (paused && Input.GetKeyDown(KeyCode.Q))
+        {
+            LoadMainMenu();
         }
 
         if (playerMovement != null && playerMovement.playerCanMove)

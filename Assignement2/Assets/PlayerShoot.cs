@@ -25,7 +25,6 @@ public class PlayerShoot : MonoBehaviour
 
     private void OnDisable()
     {
-        // Clear the static event references when the object is disabled
         shootInput = null;
         reloadInput = null;
     }

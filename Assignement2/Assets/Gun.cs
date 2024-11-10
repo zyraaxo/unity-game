@@ -12,9 +12,8 @@ public class Gun : MonoBehaviour
     private GameObject BulletPreFab;
 
     [SerializeField]
-    private GunData gunData; // Assign this in the inspector
+    private GunData gunData;
 
-    // Reference to the bullet spawn point
     [SerializeField]
     private Transform bulletPoint;
 
@@ -25,7 +24,7 @@ public class Gun : MonoBehaviour
     private AudioSource audioSource;
 
     [SerializeField]
-    private float bSpeed = 1200f; // Ensure this is positive for forward force
+    private float bSpeed = 1200f;
 
     void Start()
     {

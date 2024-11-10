@@ -11,6 +11,7 @@ TagManager:
   - GunPickup
   - SF_Door
   - Player1
+  - UI
   layers:
   - Default
   - TransparentFX

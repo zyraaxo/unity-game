@@ -2,21 +2,21 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public static Player Instance; // Singleton instance
+    public static Player Instance;
 
     [SerializeField]
-    private int keys; // Use [SerializeField] to expose in the Inspector
+    private int keys;
 
     void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Optional: persists through scene loads
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); // Prevent duplicate instances
+            Destroy(gameObject);
         }
     }
 
@@ -30,7 +30,6 @@ public class Player : MonoBehaviour
         return keys;
     }
 
-    // Optional: A method to set keys for testing
     public void SetKeys(int value)
     {
         keys = value;
