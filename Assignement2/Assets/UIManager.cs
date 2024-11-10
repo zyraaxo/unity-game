@@ -23,6 +23,8 @@ public class UIManager : MonoBehaviour
 
 
     public TextMeshProUGUI esc;
+    public TextMeshProUGUI exfil2;
+
     public TextMeshProUGUI deathText;
     public TextMeshProUGUI exfilText;
 
@@ -361,6 +363,31 @@ public class UIManager : MonoBehaviour
             countdownTimerText.text = "Time Remaining: " + timerText;
         }
     }
+    public void UpdateExfil2Text(string message)
+    {
+        if (exfil2 != null)
+        {
+            exfil2.text = message;
+            exfil2.gameObject.SetActive(true);
+
+            // Hide the message after a delay (5 seconds in this case)
+            StartCoroutine(HideExfil2MessageAfterDelay(5f));
+        }
+        else
+        {
+            Debug.LogError("exfil2 TextMeshProUGUI is not assigned in the Inspector!");
+        }
+    }
+    private IEnumerator HideExfil2MessageAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (exfil2 != null)
+        {
+            exfil2.gameObject.SetActive(false);  // Hide the message
+        }
+    }
+
+
 
 }
 

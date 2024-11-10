@@ -2,24 +2,46 @@ using UnityEngine;
 
 public class EndGameTrigger : MonoBehaviour
 {
-    private void OnTriggerStay(Collider other)
+    private bool playerInTriggerZone = false;
+
+    private void OnTriggerEnter(Collider other)
     {
-        // Check if the player is within the trigger area
         if (other.CompareTag("Player"))
         {
-            // Check if the player presses the 'E' key
-            if (Input.GetKeyDown(KeyCode.E))
+            playerInTriggerZone = true;
+            UIManager.Instance?.UpdateExfil2Text("Press 'F' to exfil");
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInTriggerZone = false;
+            UIManager.Instance?.UpdateExfil2Text("");
+        }
+    }
+
+    private void Update()
+    {
+        if (playerInTriggerZone && Input.GetKeyDown(KeyCode.F))
+        {
+            if (Player.Instance.GetKeys() >= 3)
             {
-                // Check if the player has 3 or more keys
-                if (Player.Instance != null && Player.Instance.GetKeys() >= 3)
+                if (GameManager.Instance.IsDataUploaded())  // Check if data upload is complete
                 {
-                    // Call the EndGame method from the GameManager
+                    UIManager.Instance?.UpdateExfil2Text("Press 'F' to exfil");
                     GameManager.Instance.EndGame();
                 }
                 else
                 {
-                    Debug.Log("Not enough keys! You need 3 keys to end the game.");
+                    UIManager.Instance?.UpdateExfil2Text("Data not uploaded. Cannot exfil.");
+                    Debug.Log("Data upload not complete, cannot exfil.");
                 }
+            }
+            else
+            {
+                Debug.Log("Not enough keys. You need 3 keys to exfil.");
             }
         }
     }

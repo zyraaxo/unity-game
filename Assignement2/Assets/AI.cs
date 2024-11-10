@@ -1,14 +1,11 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
-//This is the AI class for the zombies, handles animation, added patrol logic to simulate zombie like behaviour, uses navMesh for the terrain, added flocking to simulate zombie herds
 
 public class MoveTowardsPlayer : MonoBehaviour
 {
     public float speed = 2.0f;
     public ParticleSystem deathParticles;
-
-
     public float attackRange = 5f;
     public float patrolSpeed = 1.0f;
     public float maxDistance = 10.0f;
@@ -35,6 +32,10 @@ public class MoveTowardsPlayer : MonoBehaviour
     private NavMeshAgent agent;
     private float stoppingDistance = 2.0f;
     private bool isDead = false;
+    private float attackSoundCooldown = 2f; // 2-second gap for attack sounds
+    private float lastAttackTime = 0f;
+    private bool isAttacking = false; // Track if currently attacking
+
 
     void Start()
     {
@@ -68,14 +69,21 @@ public class MoveTowardsPlayer : MonoBehaviour
         if (player != null && !isDead)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-            bool isAttacking = distanceToPlayer <= stoppingDistance;
+            bool shouldAttack = distanceToPlayer <= stoppingDistance;
             bool isMoving = distanceToPlayer > stoppingDistance && distanceToPlayer <= maxDistance;
-            bool isPatrolling = !isMoving && !isAttacking;
+            bool isPatrolling = !isMoving && !shouldAttack;
 
-            if (isAttacking)
+            if (shouldAttack)
             {
                 AttackPlayer();
                 agent.speed = speed;
+
+                // Only play the attack sound if not already attacking
+                if (!isAttacking)
+                {
+                    PlayAttackSound(); // Play the attack sound
+                    isAttacking = true; // Set attacking flag to true
+                }
             }
             else if (isMoving)
             {
@@ -88,18 +96,28 @@ public class MoveTowardsPlayer : MonoBehaviour
                 agent.speed = patrolSpeed;
             }
 
-            if (!isAttacking)
+            if (!shouldAttack)
             {
                 animator.SetBool("isAttacking", false);
             }
 
-            if (!isAttacking && !isMoving)
+            if (!shouldAttack && !isMoving)
             {
                 ApplyFlocking();
                 agent.speed = flockingSpeed;
             }
+            else
+            {
+                // Stop the attack sound if not attacking anymore
+                if (!isAttacking)
+                {
+                    StopAttackSound();
+                    isAttacking = false;
+                }
+            }
         }
     }
+
 
     void ApplyFlocking()
     {
@@ -232,6 +250,28 @@ public class MoveTowardsPlayer : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         return distanceToPlayer <= attackRange;
     }
+
+    void PlayAttackSound()
+    {
+        if (Time.time - lastAttackTime >= attackSoundCooldown && !isAttacking)
+        {
+            if (AudioManager.Instance != null && attackAudio != null)
+            {
+                AudioManager.Instance.PlaySound(attackAudio);
+            }
+            isAttacking = true;
+            lastAttackTime = Time.time;
+        }
+    }
+    void StopAttackSound()
+    {
+        if (AudioManager.Instance != null && AudioManager.Instance.audioSource.isPlaying)
+        {
+            AudioManager.Instance.StopSound(attackAudio);
+        }
+    }
+
+
 
     void OnTriggerEnter(Collider other)
     {

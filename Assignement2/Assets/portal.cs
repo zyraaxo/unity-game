@@ -4,7 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class Portal : MonoBehaviour
 {
-    public Material newPortalMaterial; private Renderer portalRenderer;
+    public Material newPortalMaterial;
+    private Renderer portalRenderer;
     private bool canActivatePortal = false;
     public float activationDistance = 5f;
 
@@ -15,6 +16,7 @@ public class Portal : MonoBehaviour
 
     public GameObject exfilSpot;
     private bool canExfil = false;
+
     void Start()
     {
         portalRenderer = GetComponent<Renderer>();
@@ -54,7 +56,14 @@ public class Portal : MonoBehaviour
 
             if (canExfil && Input.GetKeyDown(KeyCode.E) && exfilSpot != null)
             {
-                EndGameViaExfil();
+                if (GameManager.Instance.IsDataUploaded())
+                {
+                    EndGameViaExfil();
+                }
+                else
+                {
+                    UIManager.Instance.ShowKeyCheckText("You must finish the data upload first!");
+                }
             }
         }
     }
@@ -77,6 +86,8 @@ public class Portal : MonoBehaviour
 
         UIManager.Instance.ShowExfilMessage();
         gameEnded = true;
+
+        GameManager.Instance.SetDataUploaded(true);
 
         if (terrainObjectSpawner != null)
         {

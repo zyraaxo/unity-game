@@ -21,7 +21,7 @@ public class AudioManager : MonoBehaviour
 
     public AudioClip[] gunSounds;
 
-    private AudioSource audioSource;
+    public AudioSource audioSource;
 
     void Awake()
     {
@@ -55,6 +55,13 @@ public class AudioManager : MonoBehaviour
         if (clip != null)
         {
             audioSource.PlayOneShot(clip);
+        }
+    }
+    public void StopSound(AudioClip clip)
+    {
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            audioSource.Stop();
         }
     }
 
