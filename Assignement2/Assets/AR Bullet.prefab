@@ -22,11 +22,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c585b3fdd43f484dbd084a061300ce3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.392629
+      value: 2.517483
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c585b3fdd43f484dbd084a061300ce3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.9228653
+      value: 1.0522623
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c585b3fdd43f484dbd084a061300ce3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -34,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c585b3fdd43f484dbd084a061300ce3, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c585b3fdd43f484dbd084a061300ce3, type: 3}
       propertyPath: m_LocalRotation.x
@@ -46,7 +46,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c585b3fdd43f484dbd084a061300ce3, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c585b3fdd43f484dbd084a061300ce3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -58,11 +58,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c585b3fdd43f484dbd084a061300ce3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9c585b3fdd43f484dbd084a061300ce3, type: 3}
+      propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9c585b3fdd43f484dbd084a061300ce3, type: 3}
       propertyPath: m_Name
-      value: Bullet-2
+      value: AR Bullet
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -73,13 +77,13 @@ PrefabInstance:
       addedObject: {fileID: 290744534276882391}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9c585b3fdd43f484dbd084a061300ce3, type: 3}
       insertIndex: -1
+      addedObject: {fileID: -2977264349822099070}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9c585b3fdd43f484dbd084a061300ce3, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 29154470486835124}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9c585b3fdd43f484dbd084a061300ce3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 9199507340447459764}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9c585b3fdd43f484dbd084a061300ce3, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: -2977264349822099070}
   m_SourcePrefab: {fileID: 100100000, guid: 9c585b3fdd43f484dbd084a061300ce3, type: 3}
 --- !u!1 &6845542694757357448 stripped
 GameObject:
@@ -111,8 +115,22 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &-2977264349822099070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6845542694757357448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 275d7482ff50fbb41896e3661e51a90d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletSpeed: 30
+  additionalForce: 1000
 --- !u!114 &29154470486835124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,17 +165,3 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-2977264349822099070
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6845542694757357448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 275d7482ff50fbb41896e3661e51a90d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bulletSpeed: 30
-  additionalForce: 1000

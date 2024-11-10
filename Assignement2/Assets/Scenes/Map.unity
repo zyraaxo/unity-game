@@ -200,6 +200,95 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46f1bd152789a1442bedb7ca99b59f0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &18109781
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1174160334626302127, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: pmm
+      value: 
+      objectReference: {fileID: 1229646520}
+    - target: {fileID: 1174160334626302127, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: gunData
+      value: 
+      objectReference: {fileID: 11400000, guid: 1609080e222ba92478827a4a0628b54d, type: 2}
+    - target: {fileID: 1174160334626302127, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: bulletSpawnPoint
+      value: 
+      objectReference: {fileID: 38543106}
+    - target: {fileID: 1402371551587575422, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: gunID
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1402371551587575422, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: uiGunListener
+      value: 
+      objectReference: {fileID: 114438293}
+    - target: {fileID: 1402371551587575422, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: positionReference
+      value: 
+      objectReference: {fileID: 2583652556924977473}
+    - target: {fileID: 4872832543757491431, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0c24ff3f078566f4d9d83ee8bd6a3f72, type: 2}
+    - target: {fileID: 6040712198144075656, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 201.12521
+      objectReference: {fileID: 0}
+    - target: {fileID: 6040712198144075656, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 32.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6040712198144075656, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 249.07097
+      objectReference: {fileID: 0}
+    - target: {fileID: 6040712198144075656, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7001974
+      objectReference: {fileID: 0}
+    - target: {fileID: 6040712198144075656, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.09860879
+      objectReference: {fileID: 0}
+    - target: {fileID: 6040712198144075656, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.09860882
+      objectReference: {fileID: 0}
+    - target: {fileID: 6040712198144075656, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.7001974
+      objectReference: {fileID: 0}
+    - target: {fileID: 6040712198144075656, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6040712198144075656, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 16.033
+      objectReference: {fileID: 0}
+    - target: {fileID: 6040712198144075656, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385887743554059570, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: m_Name
+      value: Shotgun
+      objectReference: {fileID: 0}
+    - target: {fileID: 7240433776410503213, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 3744501094556469539, guid: f62f7dc06bd890d4aab43b8fd635fe02, type: 3}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
 --- !u!4 &38543106 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2089367999601430530, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
@@ -6161,6 +6250,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c37c596d6a094854091ab603993180a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1229646520 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7034890075944684344, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
+  m_PrefabInstance: {fileID: 2914769724324865175}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1229646504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54fee9b75354b7742862b10d81c6846e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1249465780
 GameObject:
   m_ObjectHideFlags: 0
@@ -10249,6 +10349,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunData: {fileID: 11400000, guid: 13d963530c7b7e84bac223ecdb63ae72, type: 2}
   bulletSpawnPoint: {fileID: 38543106}
+  pmm: {fileID: 0}
 --- !u!1 &2093930701
 GameObject:
   m_ObjectHideFlags: 0
@@ -10871,15 +10972,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1560302951758249808, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.31699997
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1560302951758249808, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1560302951758249808, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.31699997
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1631089639230190515, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
       propertyPath: m_Color.b
@@ -10940,6 +11041,26 @@ PrefabInstance:
     - target: {fileID: 2025492524356885339, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
       propertyPath: m_Name
       value: FirstPersonController
+      objectReference: {fileID: 0}
+    - target: {fileID: 2089367999601430530, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2089367999601430530, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2089367999601430530, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2089367999601430530, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2089367999601430530, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 3663171892338653319, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
       propertyPath: m_TagString
@@ -11029,6 +11150,10 @@ PrefabInstance:
       propertyPath: m_Interactable
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8156394134974171323, guid: dd5b83e4fbe46bc4b95658afcc8136f3, type: 3}
+      propertyPath: pmm
+      value: 
+      objectReference: {fileID: 1229646520}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -11525,6 +11650,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1174160334626302127, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
+      propertyPath: pmm
+      value: 
+      objectReference: {fileID: 1229646520}
+    - target: {fileID: 1174160334626302127, guid: 986a93a3cf687204fa8ba28d0eef6f96, type: 3}
       propertyPath: bulletSpawnPoint
       value: 
       objectReference: {fileID: 38543106}
@@ -11741,6 +11870,7 @@ SceneRoots:
   - {fileID: 789350418}
   - {fileID: 1079806964}
   - {fileID: 7109642814073322118}
+  - {fileID: 18109781}
   - {fileID: 1019080983}
   - {fileID: 2131411617}
   - {fileID: 2041235102}

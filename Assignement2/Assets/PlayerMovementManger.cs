@@ -26,7 +26,7 @@ public class PlayerMovementManager : MonoBehaviour
     private bool isUsingRegularGun = true;
     public GunData currentGunData;
     public List<GameObject> availableGuns = new List<GameObject>();
-    private int currentGunIndex = 0;
+    public int currentGunIndex = 0;
 
 
     public bool paused;
@@ -258,4 +258,7 @@ public class PlayerMovementManager : MonoBehaviour
             UIManager.Instance.UpdateWeaponText(currentGun.name);  // Use UIManager to update the weapon text
         }
     }
+
+    public int getCurrentGunIndex() {
+        return currentGunIndex; }
 }

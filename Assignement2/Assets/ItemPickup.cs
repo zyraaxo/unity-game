@@ -6,7 +6,6 @@ public class GunPickup : MonoBehaviour
     public GameObject gunModel; // The gun model to pick up
     public GameObject positionReference; // The reference GameObject for positioning the new gun
     private static bool firstGunPickedUp = false; // Static flag to check if this is the first gun pickup
-    public UIEquippedGun uiGunListener;
     public int gunID = 0;
 
     void Update()
@@ -59,10 +58,6 @@ public class GunPickup : MonoBehaviour
                 playerMovement.currentGun = newGun;
 
                 Debug.Log("Gun picked up and replaced!");
-
-                if (uiGunListener != null) {
-                    uiGunListener.equippedGun = gunID;
-                }
 
                 string weaponName = gunModel.name;
                 UIManager.Instance?.DisplaySwitchWeaponText(weaponName);

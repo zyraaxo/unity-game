@@ -8,8 +8,9 @@ public class UIEquippedGun : MonoBehaviour
 
     [SerializeField] Image gunRifle;
     [SerializeField] Image gunPistol;
+    [SerializeField] Image gunShotgun;
+    [SerializeField] PlayerMovementManager pmm;
 
-    public int equippedGun = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -21,18 +22,25 @@ public class UIEquippedGun : MonoBehaviour
     void Update()
     {
 
-        if (gunRifle == null || gunPistol == null) {
+        if (gunRifle == null || gunPistol == null || gunShotgun == null) {
             return;
         }
 
 
-        if (equippedGun <= 0) {
-            gunRifle.transform.localScale = new Vector3(2, 2, 2);
-            gunPistol.transform.localScale = new Vector3(1, 1, 1);
-        }
-        else {
+        if (pmm.getCurrentGunIndex() <= 0) {
             gunRifle.transform.localScale = new Vector3(1, 1, 1);
             gunPistol.transform.localScale = new Vector3(2, 2, 2);
+            gunShotgun.transform.localScale = new Vector3(1, 1, 1);
+        }
+        else if (pmm.getCurrentGunIndex() <= 1) {
+            gunRifle.transform.localScale = new Vector3(1, 1, 1);
+            gunPistol.transform.localScale = new Vector3(1, 1, 1);
+            gunShotgun.transform.localScale = new Vector3(2, 2, 2);
+        }
+        else {
+            gunRifle.transform.localScale = new Vector3(2, 2, 2);
+            gunPistol.transform.localScale = new Vector3(1, 1, 1);
+            gunShotgun.transform.localScale = new Vector3(1, 1, 1);
         }
     }
 }

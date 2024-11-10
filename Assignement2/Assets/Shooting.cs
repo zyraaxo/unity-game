@@ -4,8 +4,10 @@ using UnityEngine.SceneManagement; // Import this to access scene management
 
 public class Shooting : MonoBehaviour
 {
+
     [SerializeField] public GunData gunData;
     [SerializeField] private Transform bulletSpawnPoint;
+    [SerializeField] public PlayerMovementManager pmm;
     private int currentBullets;
     private int totalAmmo;
     private bool isReloading = false;
@@ -30,6 +32,10 @@ public class Shooting : MonoBehaviour
 
     void Update()
     {
+        if (pmm == null || !pmm.currentGun.gameObject.name.Equals(this.gameObject.name)) {
+                return;
+        }
+
         if (Input.GetMouseButton(0) && Time.time >= nextFireTime && currentBullets > 0 && !isReloading)
         {
             nextFireTime = Time.time + gunData.fireRate;

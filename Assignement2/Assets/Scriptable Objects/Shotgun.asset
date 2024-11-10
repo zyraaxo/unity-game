@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b6e1d27587a668a449f3bf47ae095c8c, type: 3}
-  m_Name: Pistol
+  m_Name: Shotgun
   m_EditorClassIdentifier: 
   gunName: 
-  bulletPrefab: {fileID: 6845542694757357448, guid: b54f79f3841838b41b8486e6bd7cad0e, type: 3}
+  bulletPrefab: {fileID: 7720780154531648699, guid: bbaaa11864f98ff40b7b54b9b713bf62, type: 3}
   muzzleFlash: {fileID: 643835322603375765, guid: ad108cb82aaabf64bbb653b1f5fb5b8b, type: 3}
-  magazineSize: 30
-  fireRate: 0.2
+  magazineSize: 20
+  fireRate: 1
   reloadTime: 2
   bulletSpread: 0.25
-  gunSoundIndex: 0
-  gunIndex: 0
-  maxAmmo: 30
+  gunSoundIndex: 1
+  gunIndex: 1
+  maxAmmo: 20

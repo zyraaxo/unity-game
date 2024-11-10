@@ -19,7 +19,7 @@ public class BulletMove : MonoBehaviour
         if (rb.velocity != Vector3.zero)
         {
             Quaternion rotation = Quaternion.LookRotation(rb.velocity);
-            transform.rotation = rotation;
+            //transform.rotation = rotation;
         }
 
         RaycastHit hit;
