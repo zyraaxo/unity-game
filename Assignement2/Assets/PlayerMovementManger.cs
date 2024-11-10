@@ -115,6 +115,10 @@ public class PlayerMovementManager : MonoBehaviour
         {
             LoadMainMenu();
         }
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            SwitchGuns();
+        }
 
         if (playerMovement != null && playerMovement.playerCanMove)
         {
